@@ -13,11 +13,73 @@ func msgFilter(msg string) string {
 	//replace @到下一个非空的字段 为 ''
 	regex := regexp.MustCompile(`@[^ ]*`)
 	return regex.ReplaceAllString(msg, "")
-
 }
-func parseContent(content string) string {
+
+// Parse rich text json to text
+func parsePostContent(content string) string {
+	var contentMap map[string]interface{}
+	err := json.Unmarshal([]byte(content), &contentMap)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if contentMap["content"] == nil {
+		return ""
+	}
+	var text string
+	// deal with title
+	if contentMap["title"] != nil && contentMap["title"] != "" {
+		text += contentMap["title"].(string) + "\n"
+	}
+	// deal with content
+	contentList := contentMap["content"].([]interface{})
+	for _, v := range contentList {
+		for _, v1 := range v.([]interface{}) {
+			if v1.(map[string]interface{})["tag"] == "text" {
+				text += v1.(map[string]interface{})["text"].(string)
+			}
+		}
+		// add new line
+		text += "\n"
+	}
+	return msgFilter(text)
+}
+
+func parsePostImageKeys(content string) []string {
+	var contentMap map[string]interface{}
+	err := json.Unmarshal([]byte(content), &contentMap)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	var imageKeys []string
+
+	if contentMap["content"] == nil {
+		return imageKeys
+	}
+
+	contentList := contentMap["content"].([]interface{})
+	for _, v := range contentList {
+		for _, v1 := range v.([]interface{}) {
+			if v1.(map[string]interface{})["tag"] == "img" {
+				imageKeys = append(imageKeys, v1.(map[string]interface{})["image_key"].(string))
+			}
+		}
+	}
+
+	return imageKeys
+}
+
+func parseContent(content, msgType string) string {
 	//"{\"text\":\"@_user_1  hahaha\"}",
 	//only get text content hahaha
+	if msgType == "post" {
+		return parsePostContent(content)
+	}
+
 	var contentMap map[string]interface{}
 	err := json.Unmarshal([]byte(content), &contentMap)
 	if err != nil {
@@ -29,6 +91,7 @@ func parseContent(content string) string {
 	text := contentMap["text"].(string)
 	return msgFilter(text)
 }
+
 func processMessage(msg interface{}) (string, error) {
 	msg = strings.TrimSpace(msg.(string))
 	msgB, err := json.Marshal(msg)

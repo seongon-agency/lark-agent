@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"start-feishubot/initialization"
+	"start-feishubot/logger"
 	"start-feishubot/services/loadbalancer"
 	"strings"
 	"time"
@@ -17,6 +18,9 @@ import (
 
 type PlatForm string
 
+const (
+	MaxRetries = 3
+)
 const (
 	AzureApiUrlV1 = "openai.azure.com/openai/deployments/"
 )
@@ -37,8 +41,9 @@ type ChatGPT struct {
 	Lb          *loadbalancer.LoadBalancer
 	ApiKey      []string
 	ApiUrl      string
-	ApiModel    string
 	HttpProxy   string
+	Model       string
+	MaxTokens   int
 	Platform    PlatForm
 	AzureConfig AzureConfig
 }
@@ -48,7 +53,7 @@ const (
 	jsonBody requestBodyType = iota
 	formVoiceDataBody
 	formPictureDataBody
-	streamBody
+
 	nilBody
 )
 
@@ -91,7 +96,6 @@ func (gpt *ChatGPT) doAPIRequestWithRetry(url, method string,
 			return err
 		}
 		requestBodyData = formBody.Bytes()
-
 	case nilBody:
 		requestBodyData = nil
 
@@ -103,6 +107,7 @@ func (gpt *ChatGPT) doAPIRequestWithRetry(url, method string,
 		return errors.New("no available API")
 	}
 
+	//fmt.Println("requestBodyData", string(requestBodyData))
 	req, err := http.NewRequest(method, url, bytes.NewReader(requestBodyData))
 	if err != nil {
 		return err
@@ -111,11 +116,6 @@ func (gpt *ChatGPT) doAPIRequestWithRetry(url, method string,
 	req.Header.Set("Content-Type", "application/json")
 	if bodyType == formVoiceDataBody || bodyType == formPictureDataBody {
 		req.Header.Set("Content-Type", writer.FormDataContentType())
-	}
-	if bodyType == streamBody {
-		req.Header.Set("Accept", "text/event-stream")
-		req.Header.Set("Connection", "keep-alive")
-		req.Header.Set("Cache-Control", "no-cache")
 	}
 	if gpt.Platform == OpenAI {
 		req.Header.Set("Authorization", "Bearer "+api.Key)
@@ -126,10 +126,17 @@ func (gpt *ChatGPT) doAPIRequestWithRetry(url, method string,
 	var response *http.Response
 	var retry int
 	for retry = 0; retry <= maxRetries; retry++ {
+		// set body
+		if retry > 0 {
+			req.Body = ioutil.NopCloser(bytes.NewReader(requestBodyData))
+		}
 		response, err = client.Do(req)
 		//fmt.Println("--------------------")
 		//fmt.Println("req", req.Header)
 		//fmt.Printf("response: %v", response)
+		logger.Debug("req", req.Header)
+
+		logger.Debugf("response %v", response)
 		// read body
 		if err != nil || response.StatusCode < 200 || response.StatusCode >= 300 {
 
@@ -137,7 +144,7 @@ func (gpt *ChatGPT) doAPIRequestWithRetry(url, method string,
 			fmt.Println("body", string(body))
 
 			gpt.Lb.SetAvailability(api.Key, false)
-			if retry == maxRetries || bodyType == streamBody {
+			if retry == maxRetries {
 				break
 			}
 			time.Sleep(time.Duration(retry+1) * time.Second)
@@ -179,9 +186,54 @@ func (gpt *ChatGPT) sendRequestWithBodyType(link, method string,
 	}
 
 	err = gpt.doAPIRequestWithRetry(link, method, bodyType,
-		requestBody, responseBody, client, 3)
+		requestBody, responseBody, client, MaxRetries)
 
 	return err
+}
+
+func NewChatGPT(config initialization.Config) *ChatGPT {
+	var lb *loadbalancer.LoadBalancer
+	if config.AzureOn {
+		keys := []string{config.AzureOpenaiToken}
+		lb = loadbalancer.NewLoadBalancer(keys)
+	} else {
+		lb = loadbalancer.NewLoadBalancer(config.OpenaiApiKeys)
+	}
+	platform := OpenAI
+
+	if config.AzureOn {
+		platform = Azure
+	}
+
+	return &ChatGPT{
+		Lb:        lb,
+		ApiKey:    config.OpenaiApiKeys,
+		ApiUrl:    config.OpenaiApiUrl,
+		HttpProxy: config.HttpProxy,
+		Model:     config.OpenaiModel,
+		MaxTokens: config.OpenaiMaxTokens,
+		Platform:  platform,
+		AzureConfig: AzureConfig{
+			BaseURL:        AzureApiUrlV1,
+			ResourceName:   config.AzureResourceName,
+			DeploymentName: config.AzureDeploymentName,
+			ApiVersion:     config.AzureApiVersion,
+			ApiToken:       config.AzureOpenaiToken,
+		},
+	}
+}
+
+func (gpt *ChatGPT) FullUrl(suffix string) string {
+	var url string
+	switch gpt.Platform {
+	case Azure:
+		url = fmt.Sprintf("https://%s.%s%s/%s?api-version=%s",
+			gpt.AzureConfig.ResourceName, gpt.AzureConfig.BaseURL,
+			gpt.AzureConfig.DeploymentName, suffix, gpt.AzureConfig.ApiVersion)
+	case OpenAI:
+		url = fmt.Sprintf("%s/v1/%s", gpt.ApiUrl, suffix)
+	}
+	return url
 }
 
 func GetProxyClient(proxyString string) (*http.Client, error) {
@@ -205,46 +257,7 @@ func GetProxyClient(proxyString string) (*http.Client, error) {
 	return client, nil
 }
 
-func NewChatGPT(config initialization.Config) *ChatGPT {
-	var lb *loadbalancer.LoadBalancer
-	if config.AzureOn {
-		keys := []string{config.AzureOpenaiToken}
-		lb = loadbalancer.NewLoadBalancer(keys)
-	} else {
-		lb = loadbalancer.NewLoadBalancer(config.OpenaiApiKeys)
-	}
-	platform := OpenAI
-
-	if config.AzureOn {
-		platform = Azure
-	}
-
-	return &ChatGPT{
-		Lb:        lb,
-		ApiKey:    config.OpenaiApiKeys,
-		ApiUrl:    config.OpenaiApiUrl,
-		HttpProxy: config.HttpProxy,
-		Platform:  platform,
-		ApiModel:  config.OpenaiModel,
-		AzureConfig: AzureConfig{
-			BaseURL:        AzureApiUrlV1,
-			ResourceName:   config.AzureResourceName,
-			DeploymentName: config.AzureDeploymentName,
-			ApiVersion:     config.AzureApiVersion,
-			ApiToken:       config.AzureOpenaiToken,
-		},
-	}
-}
-
-func (gpt *ChatGPT) FullUrl(suffix string) string {
-	var url string
-	switch gpt.Platform {
-	case Azure:
-		url = fmt.Sprintf("https://%s.%s%s/%s?api-version=%s",
-			gpt.AzureConfig.ResourceName, gpt.AzureConfig.BaseURL,
-			gpt.AzureConfig.DeploymentName, suffix, gpt.AzureConfig.ApiVersion)
-	case OpenAI:
-		url = fmt.Sprintf("%s/v1/%s", gpt.ApiUrl, suffix)
-	}
-	return url
+func (gpt *ChatGPT) ChangeMode(model string) *ChatGPT {
+	gpt.Model = model
+	return gpt
 }

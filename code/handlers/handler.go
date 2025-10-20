@@ -3,14 +3,15 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"start-feishubot/initialization"
-	"start-feishubot/services"
-	"start-feishubot/services/chatgpt"
-	"start-feishubot/services/openai"
+	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
+	"start-feishubot/logger"
 	"strings"
 
-	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
+	"start-feishubot/initialization"
+	"start-feishubot/services"
+	"start-feishubot/services/openai"
 
+	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
@@ -41,21 +42,21 @@ func judgeMsgType(event *larkim.P2MessageReceiveV1) (string, error) {
 	msgType := event.Event.Message.MessageType
 
 	switch *msgType {
-	case "text", "image", "audio":
+	case "text", "image", "audio", "post":
 		return *msgType, nil
 	default:
 		return "", fmt.Errorf("unknown message type: %v", *msgType)
 	}
-
 }
 
 func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
 	handlerType := judgeChatType(event)
+	logger.Debug("handlerType", handlerType)
 	if handlerType == "otherChat" {
 		fmt.Println("unknown chat type")
 		return nil
 	}
-	//fmt.Println(larkcore.Prettify(event.Event.Message))
+	logger.Debug("收到消息：", larkcore.Prettify(event.Event.Message))
 
 	msgType, err := judgeMsgType(event)
 	if err != nil {
@@ -77,11 +78,11 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 		handlerType: handlerType,
 		msgType:     msgType,
 		msgId:       msgId,
-		userId:      *event.Event.Sender.SenderId.UserId,
 		chatId:      chatId,
-		qParsed:     strings.Trim(parseContent(*content), " "),
+		qParsed:     strings.Trim(parseContent(*content, msgType), " "),
 		fileKey:     parseFileKey(*content),
 		imageKey:    parseImageKey(*content),
+		imageKeys:   parsePostImageKeys(*content),
 		sessionId:   sessionId,
 		mention:     mention,
 	}
@@ -93,16 +94,19 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 	actions := []Action{
 		&ProcessedUniqueAction{}, //避免重复处理
 		&ProcessMentionAction{},  //判断机器人是否应该被调用
-		&EmptyAction{},           //空消息处理
+		&AudioAction{},           //语音处理
 		&ClearAction{},           //清除消息处理
+		&VisionAction{},          //图片推理处理
+		&PicAction{},             //图片处理
+		&AIModeAction{},          //模式切换处理
 		&RoleListAction{},        //角色列表处理
 		&HelpAction{},            //帮助处理
+		&BalanceAction{},         //余额处理
 		&RolePlayAction{},        //角色扮演处理
-		&MessageAction{
-			chatgpt: chatgpt.NewGpt3(&m.config),
-		}, //消息处理
+		&MessageAction{},         //消息处理
+		&EmptyAction{},           //空消息处理
+		&StreamMessageAction{},   //流式消息处理
 	}
-
 	chain(data, actions...)
 	return nil
 }

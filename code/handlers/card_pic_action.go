@@ -2,14 +2,23 @@ package handlers
 
 import (
 	"context"
-	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
+	"fmt"
+	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
+	"start-feishubot/logger"
+
 	"start-feishubot/services"
+
+	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 )
 
 func NewPicResolutionHandler(cardMsg CardMsg, m MessageHandler) CardHandlerFunc {
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		if cardMsg.Kind == PicResolutionKind {
 			CommonProcessPicResolution(cardMsg, cardAction, m.sessionCache)
+			return nil, nil
+		}
+		if cardMsg.Kind == PicStyleKind {
+			CommonProcessPicStyle(cardMsg, cardAction, m.sessionCache)
 			return nil, nil
 		}
 		return nil, ErrNextHandler
@@ -28,6 +37,7 @@ func NewPicModeChangeHandler(cardMsg CardMsg, m MessageHandler) CardHandlerFunc 
 		return nil, ErrNextHandler
 	}
 }
+
 func NewPicTextMoreHandler(cardMsg CardMsg, m MessageHandler) CardHandlerFunc {
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		if cardMsg.Kind == PicTextMoreKind {
@@ -44,19 +54,32 @@ func CommonProcessPicResolution(msg CardMsg,
 	cardAction *larkcard.CardAction,
 	cache services.SessionServiceCacheInterface) {
 	option := cardAction.Action.Option
-	//fmt.Println(larkcore.Prettify(msg))
+	fmt.Println(larkcore.Prettify(msg))
 	cache.SetPicResolution(msg.SessionId, services.Resolution(option))
 	//send text
 	replyMsg(context.Background(), "已更新图片分辨率为"+option,
 		&msg.MsgId)
 }
 
+func CommonProcessPicStyle(msg CardMsg,
+	cardAction *larkcard.CardAction,
+	cache services.SessionServiceCacheInterface) {
+	option := cardAction.Action.Option
+	fmt.Println(larkcore.Prettify(msg))
+	cache.SetPicStyle(msg.SessionId, services.PicStyle(option))
+	//send text
+	replyMsg(context.Background(), "已更新图片风格为"+option,
+		&msg.MsgId)
+}
+
 func (m MessageHandler) CommonProcessPicMore(msg CardMsg) {
 	resolution := m.sessionCache.GetPicResolution(msg.SessionId)
-	//fmt.Println("resolution: ", resolution)
-	//fmt.Println("msg: ", msg)
+	style := m.sessionCache.GetPicStyle(msg.SessionId)
+
+	logger.Debugf("resolution: %v", resolution)
+	logger.Debug("msg: %v", msg)
 	question := msg.Value.(string)
-	bs64, _ := m.gpt.GenerateOneImage(question, resolution)
+	bs64, _ := m.gpt.GenerateOneImage(question, resolution, style)
 	replayImageCardByBase64(context.Background(), bs64, &msg.MsgId,
 		&msg.SessionId, question)
 }

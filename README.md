@@ -1,55 +1,78 @@
-<p align='center'>
-    <a href='https://www.connectai-e.com.com' target="_blank" rel="noopener noreferrer">
-    <img src='https://user-images.githubusercontent.com/50035229/236435740-f749c048-1c89-4112-8bd7-e373508000f6.gif' alt='' width='800'/>
-        </a>
-</p>
+<img width="1280" alt="飞书 AI 对话" src="https://github.com/user-attachments/assets/f5b27246-6d56-43a3-a4e1-9db8c69f698d" />
 
-
-
-
-
-
+<a href="https://www.connectai-e.com" target="_blank" rel="noreferrer">
+  <img align="center" width="100%" height="auto" src="https://github-production-user-asset-6210df.s3.amazonaws.com/50035229/250274252-7f07a95e-b5aa-4dd8-90e7-5fb3bfb863c7.svg" >
+</a>
+<br>
+<br>
+<details align='center' style="margin-top: 10px">
+    <summary> 📷 点击展开完整功能</summary>
+    <br>
+    <p align='center'>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/b3543ae5-23cc-4fd7-829b-74656a300901' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/948b051a-c25a-4825-8a18-5b72f6660b87' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/a2139cc3-021e-4820-8e95-53a70541f136' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/8e700709-ec0d-4c5e-b4af-710e42a0ba69' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/001cb314-5fe2-4c93-86a7-66ea747b7855' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/4dc12ca6-5305-4bc5-bf1a-40354c17ef29' width='800'/>
+        <img src='https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/0c3178a0-e648-4013-a042-c1f83dbbe847' width='800'/>   
+    </p>
+</details>
 
 <br>
 
 <p align='center'>
-   飞书 ×（GPT）+ 打字机效果
+   飞书 ×（GPT-4 + DALL·E + Whisper）
 <br>
 <br>
     🚀 Feishu OpenAI 🚀
 </p>
 
-| <div style="width:200px">AI</div> |             <img width=120> SDK <img width=120>              |                         Application                          |
-| :-------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|              🎒OpenAI              |    [Go-OpenAI](https://github.com/ConnectAI-E/Go-OpenAI)     | [🏅Feishu-OpenAI](https://github.com/ConnectAI-E/Feishu-OpenAI), [🎖Lark-OpenAI](https://github.com/ConnectAI-E/Lark-OpenAI), [Feishu-EX-ChatGPT](https://github.com/ConnectAI-E/Feishu-EX-ChatGPT), [🎖Feishu-OpenAI-Stream-Chatbot](https://github.com/ConnectAI-E/Feishu-OpenAI-Stream-Chatbot), [Feishu-TLDR](https://github.com/ConnectAI-E/Feishu-TLDR),[Feishu-OpenAI-Amazing](https://github.com/ConnectAI-E/Feishu-OpenAI-Amazing), [Feishu-Oral-Friend](https://github.com/ConnectAI-E/Feishu-Oral-Friend), [Feishu-OpenAI-Base-Helper](https://github.com/ConnectAI-E/Feishu-OpenAI-Base-Helper), [Feishu-Vector-Knowledge-Management](https://github.com/ConnectAI-E/Feishu-Vector-Knowledge-Management), [Feishu-OpenAI-PDF-Helper](https://github.com/ConnectAI-E/Feishu-OpenAI-PDF-Helper), [🏅Dingtalk-OpenAI](https://github.com/ConnectAI-E/Dingtalk-OpenAI), [Wework-OpenAI](https://github.com/ConnectAI-E/Wework-OpenAI), [WeWork-OpenAI-Node](https://github.com/ConnectAI-E/WeWork-OpenAI-Node), [llmplugin](https://github.com/ConnectAI-E/llmplugin) |
-|             🤖 AutoGPT             |                            ------                            | [🏅AutoGPT-Next-Web](https://github.com/ConnectAI-E/AutoGPT-Next-Web) |
-|         🎭 Stablediffusion         |                            ------                            | [🎖Feishu-Stablediffusion](https://github.com/ConnectAI-E/Feishu-Stablediffusion) |
-|           🍎 Midjourney            | [Go-Midjourney](https://github.com/ConnectAI-E/Go-Midjourney) | [🏅Feishu-Midjourney](https://github.com/ConnectAI-E/Feishu-Midjourney), [🔥MidJourney-Web](https://github.com/ConnectAI-E/MidJourney-Web), [Dingtalk-Midjourney](https://github.com/ConnectAI-E/Dingtalk-Midjourney) |
-|            🍍 文心一言             |    [Go-Wenxin](https://github.com/ConnectAI-E/Go-Wenxin)     | [Feishu-Wenxin](https://github.com/ConnectAI-E/Feishu-Wenxin), [Dingtalk-Wenxin](https://github.com/ConnectAI-E/Dingtalk-Wenxin), [Wework-Wenxin](https://github.com/ConnectAI-E/Wework-Wenxin) |
-|             💸 Minimax             |   [Go-Minimax](https://github.com/ConnectAI-E/Go-Minimax)    | [Feishu-Minimax](https://github.com/ConnectAI-E/Feishu-Minimax), [Dingtalk-Minimax](https://github.com/ConnectAI-E/Dingtalk-Minimax), [Wework-Minimax](https://github.com/ConnectAI-E/Wework-Minimax) |
-|             ⛳️ CLAUDE              |    [Go-Claude](https://github.com/ConnectAI-E/Go-Claude)     | [Feishu-Claude](https://github.com/ConnectAI-E/Feishu-Claude), [DingTalk-Claude](https://github.com/ConnectAI-E/DingTalk-Claude), [Wework-Claude](https://github.com/ConnectAI-E/Wework-Claude) |
-|              🥁 PaLM               |      [Go-PaLM](https://github.com/ConnectAI-E/go-PaLM)       | [Feishu-PaLM](https://github.com/ConnectAI-E/Feishu-PaLM),[DingTalk-PaLM](https://github.com/ConnectAI-E/DingTalk-PaLM),[Wework-PaLM](https://github.com/ConnectAI-E/Wework-PaLM) |
-|             🎡 Prompt              |                            ------                            | [📖 Prompt-Engineering-Tutior](https://github.com/ConnectAI-E/Prompt-Engineering-Tutior) |
-|             🍋 ChatGLM             |                            ------                            | [Feishu-ChatGLM](https://github.com/ConnectAI-E/Feishu-ChatGLM) |
-|            ⛓ LangChain            |                            ------                            | [📖 LangChain-Tutior](https://github.com/ConnectAI-E/LangChain-Tutior) |
-|            🪄 One-click            |                            ------                            | [🎖Awesome-One-Click-Deployment](https://github.com/ConnectAI-E/Awesome-One-Click-Deployment) |
+  
+<p align='center'>
+   www.connectai-e.com
+</p>
+
+## 赞助
+
+本项目 CDN 加速及安全防护由 [Tencent EdgeOne](https://edgeone.ai/zh?from=github) 赞助
+
+<img src='https://github.com/user-attachments/assets/a8111283-d774-423d-8f7d-30b2521baa73' width='200'/>   
 
 
+## 商业支持
 
+升级至商业共创版，满足您公司的需求：
+1. 全面支持：集成OpenAI、Midjourney等主流AI模型，充足资源满足小团队全年需求。
+2. 超值优惠：后续补充AI资源价格仅为官方价的60%，为您节省成本。
+3. 持续更新：企联AI已获「奇绩创坛」数百万天使投资，确保商业版持续优化和质量提升。
+4. 管理便捷：实用Admin Panel助您轻松管理AI资源、查询日志、避免风险词汇和权限控制。
+5. 高度安全：提供在线SaaS版与企业级私有部署，确保数据安全和隐私保护。
 
+查看更多内容: https://www.connectai-e.com
 
+企业客户咨询: 15623677720
+
+<img width="300" src="https://github.com/DDMeaqua/Feishu-OpenAI/assets/110169811/0a07f7e2-183f-4ee4-a40a-e33ee5c440e4">
+<img width="300" src="https://github.com/ConnectAI-E/Feishu-OpenAI/assets/110169811/ef313ce0-158e-4314-a932-e6b1180cc750">
 
 
 
 ## 👻 机器人功能
 
-🥖 流式文本输出: 仿真打字机效果，更真实的对话体验
+🗣 语音交流：私人直接与机器人畅所欲言「Whisper」
+
+🕵️ 图片推理: 借助大模型互动式对话图片「GPT4V」
 
 💬 多话题对话：支持私人和群聊多话题讨论，高效连贯
+
+🖼 文本成图：支持文本成图和以图搜图 「DALLE-3」
 
 🛖 场景预设：内置丰富场景列表，一键切换AI角色
 
 🎭 角色扮演：支持场景模式，增添讨论乐趣和创意
+
+🤖 AI模式：内置4种AI模式，感受AI的智慧与创意
 
 🔄 上下文保留：回复对话框即可继续同一话题讨论
 
@@ -57,18 +80,36 @@
 
 📝 富文本卡片：支持富文本卡片回复，信息更丰富多彩
 
-## TODO
+👍 交互式反馈：即时获取机器人处理结果
 
-- [ ] 与[Feishu-ChatBot](https://github.com/ConnectAI-E/Feishu-OpenAI)进行整合，进一步完善chatbot能力
-- [ ] 🔙 历史回档: 轻松回档历史对话，继续话题讨论
-- [ ] 🎥 话题内容秒转PPT：让你的汇报从此变得更加简单
-- [ ] prompt优化：深化场景细分，让chatbot成为你的个人专属助理
-- [ ] 群聊summary：新人加群后可让机器人自动分析并总结群内历史消息
-- [ ] 群聊活跃状态：机器人活跃状态可控，而不需要每句话都艾特它
-- [ ] 其他欢迎补充
+🎰 余额查询：即时获取token消耗情况
+
+🔙 历史回档：轻松回档历史对话，继续话题讨论 🚧
+
+🔒 管理员模式：内置管理员模式，使用更安全可靠 🚧
+
+🌐 多token负载均衡：优化生产级别的高频调用场景
+
+↩️ 支持反向代理：为不同地区的用户提供更快、更稳定的访问体验
+
+📚 与飞书文档互动：成为企业员工的超级助手 🚧
+
+🎥 话题内容秒转PPT：让你的汇报从此变得更加简单 🚧
+
+📊 表格分析：轻松导入飞书表格，提升数据分析效率 🚧
+
+🍊 私有数据训练：利用公司产品信息对GPT二次训练，更好地满足客户个性化需求 🚧
 
 
 
+## 🌟 项目特点
+
+- 🍏 支持 OpenAI (https://platform.openai.com/account/api-keys) 主要Chat接口:GPT4、DALL·E-3、Whisper、GPT-4V
+- 🍎 将 ChatGPT 接入[飞书](https://open.feishu.cn/app)和[飞书国际版](https://www.larksuite.com/)
+- 🥒
+  支持[Serverless 云函数](https://github.com/serverless-devs/serverless-devs)、[本地环境](https://dashboard.cpolar.com/login)、[Docker](https://www.docker.com/)、[二进制安装包](https://github.com/Leizhenpeng/feishu-chatgpt/releases/)
+  等多种渠道部署
+  
 ## 项目部署
 
 ###### 有关飞书的配置文件说明，**[➡︎ 点击查看](#详细配置步骤)**
@@ -78,8 +119,8 @@
 <br>
 
 ```bash
-git clone https://github.com/ConnectAI-E/Feishu-OpenAI-Stream-Chatbot.git
-cd Feishu-OpenAI-Stream-Chatbot/code
+git clone git@github.com:Leizhenpeng/feishu-chatgpt.git
+cd feishu-chatgpt/code
 ```
 
 如果你的服务器没有公网 IP，可以使用反向代理的方式
@@ -211,18 +252,18 @@ s deploy
     <summary>使用 Railway 平台一键部署</summary>
 
 
-Railway 是一家国外的 Serverless 平台，支持多种语言，可以一键将 Github 上的代码仓库部署到 Railway 平台，然后在 Railway
+Railway 是一家国外的 Serverless 平台，支持多种语言，可以一键将 GitHub 上的代码仓库部署到 Railway 平台，然后在 Railway
 平台上配置环境变量即可。部署本项目的流程如下：
 
 #### 1. 生成 Railway 项目
 
-点击下方按钮即可创建一个对应的 Railway 项目，其会自动 Fork 本项目到你的 Github 账号下。
+点击下方按钮即可创建一个对应的 Railway 项目，其会自动 Fork 本项目到你的 GitHub 账号下。
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/c5gX3_?referralCode=oXo6Mc)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/10D-TF?referralCode=oMcVS2)
 
 #### 2. 配置环境变量
 
-在打开的页面中，配置环境变量，PORT/HTTP_PORT 必须设置为 80 ，railway health check 默认检查 80 端口，不支持自定义端口,每个变量的说明如下图所示：
+在打开的页面中，配置环境变量，每个变量的说明如下图所示：
 
 
 <img src='https://user-images.githubusercontent.com/50035229/225005602-88d8678f-9d17-4dc5-8d1e-4abf64fb84fd.png' alt='Railway 环境变量' width='500px'/>
@@ -235,6 +276,33 @@ Railway 是一家国外的 Serverless 平台，支持多种语言，可以一键
 
 如果不确定自己部署是否成功，可以通过访问上述获取到的域名 (https://xxxxxxxx.railway.app/ping) 来查看是否返回了`pong`
 ，如果返回了`pong`，说明部署成功。
+
+</details>
+
+
+<details>
+    <summary>Repl.it部署</summary>
+<br>
+
+The fastest way to deploy the feishu-openai to `repl.it` is to click the `run on repl.it` button below.
+
+<a href="https://replit.com/@Leizhenpeng/Feishu-OpenAI#.replit">
+  <img alt="Run on Repl.it" src="https://repl.it/badge/github/alist-org/alist-replit" style="height: 40px; width: 190px;" />
+</a>
+
+Remember switch to `secrets` tab then edit `System environment variables`.You can also edit raw json:
+
+```json
+{
+  "APP_ID": "",
+  "APP_SECRET": "",
+  "APP_ENCRYPT_KEY": "",
+  "APP_VERIFICATION_TOKEN": "",
+  "BOT_NAME": "ChatGPT",
+  "OPENAI_KEY": "sk-",
+  "OPENAI_MODEL": "gpt-3.5-turbo"
+}
+```
 
 </details>
 
@@ -265,6 +333,57 @@ feishu-chatgpt:latest
 
 ---
 
+小白简易化 docker 部署
+
+- docker 地址: https://hub.docker.com/r/leizhenpeng/feishu-chatgpt
+
+```bash
+docker run -d --restart=always --name feishu-chatgpt2 -p 9000:9000 -v /etc/localtime:/etc/localtim:ro  \
+--env APP_ID=xxx \
+--env APP_SECRET=xxx \
+--env APP_ENCRYPT_KEY=xxx \
+--env APP_VERIFICATION_TOKEN=xxx \
+--env BOT_NAME=chatGpt \
+--env OPENAI_KEY="sk-xxx1,sk-xxx2,sk-xxx3" \
+--env API_URL=https://api.openai.com \
+--env HTTP_PROXY="" \
+dockerproxy.com/leizhenpeng/feishu-chatgpt:latest
+```
+
+事件回调地址: http://IP:9000/webhook/event
+卡片回调地址: http://IP:9000/webhook/card
+
+把它填入飞书后台
+
+--- 
+
+部署azure版本
+
+```bash
+docker build -t feishu-chatgpt:latest .
+docker run -d --name feishu-chatgpt -p 9000:9000 \
+--env APP_ID=xxx \
+--env APP_SECRET=xxx \
+--env APP_ENCRYPT_KEY=xxx \
+--env APP_VERIFICATION_TOKEN=xxx \
+--env BOT_NAME=chatGpt \
+--env AZURE_ON=true \
+--env AZURE_API_VERSION=xxx \
+--env AZURE_RESOURCE_NAME=xxx \
+--env AZURE_DEPLOYMENT_NAME=xxx \
+--env AZURE_OPENAI_TOKEN=xxx \
+feishu-chatgpt:latest
+```
+
+注意:
+
+- `BOT_NAME` 为飞书机器人名称，例如 `chatGpt`
+- `AZURE_ON` 为是否使用azure ,请填写 `true`
+- `AZURE_API_VERSION` 为azure api版本 例如 `2023-03-15-preview`
+- `AZURE_RESOURCE_NAME` 为azure 资源名称 类似 `https://{AZURE_RESOURCE_NAME}.openai.azure.com`
+- `AZURE_DEPLOYMENT_NAME` 为azure 部署名称 类似 `https://{AZURE_RESOURCE_NAME}.openai.azure.com/deployments/{AZURE_DEPLOYMENT_NAME}/chat/completions`
+- `AZURE_OPENAI_TOKEN` 为azure openai token
+
 </details>
 
 <details>
@@ -289,7 +408,19 @@ docker compose down
 
 </details>
 
+<details>
+    <summary>二进制安装包部署</summary>
+<br>
 
+1. 进入[release 页面](https://github.com/Leizhenpeng/feishu-chatgpt/releases/) 下载对应的安装包
+2. 解压安装包,修改 config.example.yml 中配置信息,另存为 config.yaml
+3. 目录下添加文件 `role_list.yaml`，自定义角色，可以从这里获取：[链接](https://github.com/Leizhenpeng/feishu-chatgpt/blob/master/code/role_list.yaml)
+3. 运行程序入口文件 `feishu-chatgpt`
+
+事件回调地址: http://IP:9000/webhook/event
+卡片回调地址: http://IP:9000/webhook/card
+
+</details>
 
 ## 详细配置步骤
 
@@ -327,7 +458,7 @@ docker compose down
         - `http://xxxx.r6.cpolar.top`为 cpolar 暴露的公网地址
         - `/webhook/card`为统一的应用路由
         - 最终的消息卡片请求网址为 `http://xxxx.r6.cpolar.top/webhook/card`
-    5. 在事件订阅板块，搜索三个词`机器人进群`、 `接收消息`、 `消息已读`添加, 并将他们所需权限全部申请开通。
+    5. 在事件订阅板块，搜索三个词`机器人进群`、 `接收消息`、 `消息已读`, 把他们后面所有的权限全部勾选。
        进入权限管理界面，搜索`图片`, 勾选`获取与上传图片或文件资源`。
        最终会添加下列回调事件
         - im:resource(获取与上传图片或文件资源)
@@ -345,51 +476,37 @@ docker compose down
 
 更多介绍，参考[飞书上的小计算器: Go 机器人来啦](https://www.bilibili.com/video/BV12M41187rV/)
 
-## 一些附加功能
 
-### 1. 日志功能
-
-可以参考 docker-compose.yml 和 config.example.yaml 里面的配置。要注意需要将 logs 目录映射到外部，这样可以方便查看日志。
-
-记录的日志大概是这样的：
-```
-2023/05/04 00:00:00 Success request: UserId: XXX , Request: [{user 请问今天是几号？} {assistant 抱歉，作为AI语言模型，我不知道今天是几号。请您查看您的设备上的日期或者问问其他人。}] , Response: 
-抱歉，作为AI语言模型，我不知道今天是几号。请您查看您的设备上的日期或者问问其他人。
-```
-
-这里为了保护用户隐私，没有调用飞书接口，将 UserId 翻译为可读的名字。如果有需要的话，建议单个单个按照 UserId 让飞书管理员查找。
-
-
-此外，比如可以使用
-```
-grep "UserId" app.log | wc -l
-```
-来统计一共问了多少个问题。(可以根据实际需求来进行搜索，比如只搜索 Success request 成功回复的请求。)
-
-### 2. 限流功能
-
-可以参考 docker-compose.yml 和 config.example.yaml 里面的配置。要注意这里没有将访问数据保存在外部，这样是为了先不引入外部依赖，比如 redis 或者 mysql。由于可以控制的时间范围是1天，所以放内存里也没啥大问题。
-
-
-## 更多交流
-
-
-如需协助部署，或者其他定制服务，可联系下面的WeChat，支持发票~
+## 一起交流
 
 遇到问题，可以加入飞书群沟通~
 
+<img src='https://github.com/ConnectAI-E/feishu-openai/assets/110169811/bc19db83-422e-4f2f-9465-77489817d482' alt='' width='300'/>
 
-<img src='https://user-images.githubusercontent.com/50035229/229813025-516d09f7-7de3-46b5-8407-f0bbf8b44344.png' alt='' width='200'/>
 
-## 交朋友 或者 鼓励一下
+## 企联AI
 
-如果你觉得这个项目对你有帮助，可以请作者买本书~
+| <div style="width:200px">AI</div> |             <img width=120> SDK <img width=120>              |                         Application                          |
+| :-------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|              🎒OpenAI              |    [Go-OpenAI](https://github.com/ConnectAI-E/Go-OpenAI)     | [🏅Feishu-OpenAI](https://github.com/ConnectAI-E/Feishu-OpenAI), [🎖Lark-OpenAI](https://github.com/ConnectAI-E/Lark-OpenAI), [Feishu-EX-ChatGPT](https://github.com/ConnectAI-E/Feishu-EX-ChatGPT), [🎖Feishu-OpenAI-Stream-Chatbot](https://github.com/ConnectAI-E/Feishu-OpenAI-Stream-Chatbot), [Feishu-TLDR](https://github.com/ConnectAI-E/Feishu-TLDR),[Feishu-OpenAI-Amazing](https://github.com/ConnectAI-E/Feishu-OpenAI-Amazing), [Feishu-Oral-Friend](https://github.com/ConnectAI-E/Feishu-Oral-Friend), [Feishu-OpenAI-Base-Helper](https://github.com/ConnectAI-E/Feishu-OpenAI-Base-Helper), [Feishu-Vector-Knowledge-Management](https://github.com/ConnectAI-E/Feishu-Vector-Knowledge-Management), [Feishu-OpenAI-PDF-Helper](https://github.com/ConnectAI-E/Feishu-OpenAI-PDF-Helper), [🏅Dingtalk-OpenAI](https://github.com/ConnectAI-E/Dingtalk-OpenAI), [Wework-OpenAI](https://github.com/ConnectAI-E/Wework-OpenAI), [WeWork-OpenAI-Node](https://github.com/ConnectAI-E/WeWork-OpenAI-Node), [llmplugin](https://github.com/ConnectAI-E/llmplugin) |
+|             🤖 AutoGPT             |                            ------                            | [🏅AutoGPT-Next-Web](https://github.com/ConnectAI-E/AutoGPT-Next-Web) |
+|         🎭 Stablediffusion         |                            ------                            | [🎖Feishu-Stablediffusion](https://github.com/ConnectAI-E/Feishu-Stablediffusion) |
+|           🍎 Midjourney            | [Go-Midjourney](https://github.com/ConnectAI-E/Go-Midjourney) | [🏅Feishu-Midjourney](https://github.com/ConnectAI-E/Feishu-Midjourney), [🔥MidJourney-Web](https://github.com/ConnectAI-E/MidJourney-Web), [Dingtalk-Midjourney](https://github.com/ConnectAI-E/Dingtalk-Midjourney) |
+|            🍍 文心一言             |    [Go-Wenxin](https://github.com/ConnectAI-E/Go-Wenxin)     | [Feishu-Wenxin](https://github.com/ConnectAI-E/Feishu-Wenxin), [Dingtalk-Wenxin](https://github.com/ConnectAI-E/Dingtalk-Wenxin), [Wework-Wenxin](https://github.com/ConnectAI-E/Wework-Wenxin) |
+|             💸 Minimax             |   [Go-Minimax](https://github.com/ConnectAI-E/Go-Minimax)    | [Feishu-Minimax](https://github.com/ConnectAI-E/Feishu-Minimax), [Dingtalk-Minimax](https://github.com/ConnectAI-E/Dingtalk-Minimax), [Wework-Minimax](https://github.com/ConnectAI-E/Wework-Minimax) |
+|             ⛳️ CLAUDE              |    [Go-Claude](https://github.com/ConnectAI-E/Go-Claude)     | [Feishu-Claude](https://github.com/ConnectAI-E/Feishu-Claude), [DingTalk-Claude](https://github.com/ConnectAI-E/DingTalk-Claude), [Wework-Claude](https://github.com/ConnectAI-E/Wework-Claude) |
+|              🥁 PaLM               |      [Go-PaLM](https://github.com/ConnectAI-E/go-PaLM)       | [Feishu-PaLM](https://github.com/ConnectAI-E/Feishu-PaLM),[DingTalk-PaLM](https://github.com/ConnectAI-E/DingTalk-PaLM),[Wework-PaLM](https://github.com/ConnectAI-E/Wework-PaLM) |
+|             🎡 Prompt              |                            ------                            | [📖 Prompt-Engineering-Tutior](https://github.com/ConnectAI-E/Prompt-Engineering-Tutior) |
+|             🍋 ChatGLM             |                            ------                            | [Feishu-ChatGLM](https://github.com/ConnectAI-E/Feishu-ChatGLM) |
+|            ⛓ LangChain            |                            ------                            | [📖 LangChain-Tutior](https://github.com/ConnectAI-E/LangChain-Tutior) |
+|            🪄 One-click            |                            ------                            | [🎖Awesome-One-Click-Deployment](https://github.com/ConnectAI-E/Awesome-One-Click-Deployment) |
 
-<img width="400" src="https://user-images.githubusercontent.com/50035229/224462896-28f7b2d5-f443-4cc2-9790-7b72e5c53f15.png">
 
-😚 谢谢你啦 😚
 
-## 赞助感谢
 
-友情感谢 'Find My AI' 提供的部分经费赞助！
+
+
+开源社区：https://github.com/ConnectAI-E
+
+
 

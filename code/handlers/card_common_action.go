@@ -18,18 +18,24 @@ func NewCardHandler(m MessageHandler) CardHandlerFunc {
 	handlers := []CardHandlerMeta{
 		NewClearCardHandler,
 		NewPicResolutionHandler,
+		NewVisionResolutionHandler,
 		NewPicTextMoreHandler,
 		NewPicModeChangeHandler,
 		NewRoleTagCardHandler,
 		NewRoleCardHandler,
+		NewAIModeCardHandler,
+		NewVisionModeChangeHandler,
 	}
 
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		var cardMsg CardMsg
 		actionValue := cardAction.Action.Value
 		actionValueJson, _ := json.Marshal(actionValue)
-		json.Unmarshal(actionValueJson, &cardMsg)
+		if err := json.Unmarshal(actionValueJson, &cardMsg); err != nil {
+			return nil, err
+		}
 		//pp.Println(cardMsg)
+		//logger.Debug("cardMsg ", cardMsg)
 		for _, handler := range handlers {
 			h := handler(cardMsg, m)
 			i, err := h(ctx, cardAction)
