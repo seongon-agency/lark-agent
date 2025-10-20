@@ -26,7 +26,7 @@ func CommonProcessClearCache(cardMsg CardMsg, session services.SessionServiceCac
 	if cardMsg.Value == "1" {
 		session.Clear(cardMsg.SessionId)
 		newCard, _ := newSendCard(
-			withHeader("️🆑 Bot Reminder", larkcard.TemplateGrey),
+			withHeader("🆑 Bot Reminder", larkcard.TemplateGrey),
 			withMainMd("Context information for this topic has been deleted"),
 			withNote("We can start a brand new topic, feel free to continue chatting with me"),
 		)
@@ -35,7 +35,7 @@ func CommonProcessClearCache(cardMsg CardMsg, session services.SessionServiceCac
 	}
 	if cardMsg.Value == "0" {
 		newCard, _ := newSendCard(
-			withHeader("️🆑 Bot Reminder", larkcard.TemplateGreen),
+			withHeader("🆑 Bot Reminder", larkcard.TemplateGreen),
 			withMainMd("Context information for this topic is still retained"),
 			withNote("We can continue discussing this topic, looking forward to chatting with you. If you have other questions or topics you'd like to discuss, please let me know"),
 		)

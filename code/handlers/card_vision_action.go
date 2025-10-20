@@ -64,7 +64,7 @@ func CommonProcessVisionModeChange(cardMsg CardMsg,
 	}
 	if cardMsg.Value == "0" {
 		newCard, _ := newSendCard(
-			withHeader("️🎒 Bot Reminder", larkcard.TemplateGreen),
+			withHeader("🎒 Bot Reminder", larkcard.TemplateGreen),
 			withMainMd("Context information for this topic is still retained"),
 			withNote("We can continue discussing this topic, looking forward to chatting with you. If you have other questions or topics you'd like to discuss, please let me know"),
 		)
