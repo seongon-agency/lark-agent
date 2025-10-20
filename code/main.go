@@ -27,7 +27,7 @@ func main() {
 		config.FeishuAppVerificationToken, config.FeishuAppEncryptKey).
 		OnP2MessageReceiveV1(handlers.Handler).
 		OnP2MessageReadV1(func(ctx context.Context, event *larkim.P2MessageReadV1) error {
-			logger.Debugf("收到请求 %v", event.RequestURI)
+			logger.Debugf("Received request %v", event.RequestURI)
 			return handlers.ReadHandler(ctx, event)
 		})
 

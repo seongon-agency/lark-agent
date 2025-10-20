@@ -19,7 +19,7 @@ type MsgInfo struct {
 	qParsed     string
 	fileKey     string
 	imageKey    string
-	imageKeys   []string // post 消息卡片中的图片组
+	imageKeys   []string // Image group in post message card
 	sessionId   *string
 	mention     []*larkim.MentionEvent
 }
@@ -33,7 +33,7 @@ type Action interface {
 	Execute(a *ActionInfo) bool
 }
 
-type ProcessedUniqueAction struct { //消息唯一性
+type ProcessedUniqueAction struct { // Message uniqueness
 }
 
 func (*ProcessedUniqueAction) Execute(a *ActionInfo) bool {
@@ -44,15 +44,15 @@ func (*ProcessedUniqueAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type ProcessMentionAction struct { //是否机器人应该处理
+type ProcessMentionAction struct { // Whether the bot should process
 }
 
 func (*ProcessMentionAction) Execute(a *ActionInfo) bool {
-	// 私聊直接过
+	// Private chat passes directly
 	if a.info.handlerType == UserHandler {
 		return true
 	}
-	// 群聊判断是否提到机器人
+	// Group chat checks if bot is mentioned
 	if a.info.handlerType == GroupHandler {
 		if a.handler.judgeIfMentionMe(a.info.mention) {
 			return true
@@ -62,12 +62,12 @@ func (*ProcessMentionAction) Execute(a *ActionInfo) bool {
 	return false
 }
 
-type EmptyAction struct { /*空消息*/
+type EmptyAction struct { /* Empty message */
 }
 
 func (*EmptyAction) Execute(a *ActionInfo) bool {
 	if len(a.info.qParsed) == 0 {
-		sendMsg(*a.ctx, "🤖️：你想知道什么呢~", a.info.chatId)
+		sendMsg(*a.ctx, "🤖️: What would you like to know?~", a.info.chatId)
 		fmt.Println("msgId", *a.info.msgId,
 			"message.text is empty")
 
@@ -76,12 +76,12 @@ func (*EmptyAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type ClearAction struct { /*清除消息*/
+type ClearAction struct { /* Clear message */
 }
 
 func (*ClearAction) Execute(a *ActionInfo) bool {
 	if _, foundClear := utils.EitherTrimEqual(a.info.qParsed,
-		"/clear", "清除"); foundClear {
+		"/clear", "clear"); foundClear {
 		sendClearCacheCheckCard(*a.ctx, a.info.sessionId,
 			a.info.msgId)
 		return false
@@ -89,12 +89,12 @@ func (*ClearAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type RolePlayAction struct { /*角色扮演*/
+type RolePlayAction struct { /* Role-playing */
 }
 
 func (*RolePlayAction) Execute(a *ActionInfo) bool {
 	if system, foundSystem := utils.EitherCutPrefix(a.info.qParsed,
-		"/system ", "角色扮演 "); foundSystem {
+		"/system ", "role play "); foundSystem {
 		a.handler.sessionCache.Clear(*a.info.sessionId)
 		systemMsg := append([]openai.Messages{}, openai.Messages{
 			Role: "system", Content: system,
@@ -107,27 +107,27 @@ func (*RolePlayAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type HelpAction struct { /*帮助*/
+type HelpAction struct { /* Help */
 }
 
 func (*HelpAction) Execute(a *ActionInfo) bool {
 	if _, foundHelp := utils.EitherTrimEqual(a.info.qParsed, "/help",
-		"帮助"); foundHelp {
+		"help"); foundHelp {
 		sendHelpCard(*a.ctx, a.info.sessionId, a.info.msgId)
 		return false
 	}
 	return true
 }
 
-type BalanceAction struct { /*余额*/
+type BalanceAction struct { /* Balance */
 }
 
 func (*BalanceAction) Execute(a *ActionInfo) bool {
 	if _, foundBalance := utils.EitherTrimEqual(a.info.qParsed,
-		"/balance", "余额"); foundBalance {
+		"/balance", "balance"); foundBalance {
 		balanceResp, err := a.handler.gpt.GetBalance()
 		if err != nil {
-			replyMsg(*a.ctx, "查询余额失败，请稍后再试", a.info.msgId)
+			replyMsg(*a.ctx, "Failed to query balance, please try again later", a.info.msgId)
 			return false
 		}
 		sendBalanceCard(*a.ctx, a.info.sessionId, *balanceResp)
@@ -136,12 +136,12 @@ func (*BalanceAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type RoleListAction struct { /*角色列表*/
+type RoleListAction struct { /* Role list */
 }
 
 func (*RoleListAction) Execute(a *ActionInfo) bool {
 	if _, foundSystem := utils.EitherTrimEqual(a.info.qParsed,
-		"/roles", "角色列表"); foundSystem {
+		"/roles", "roles"); foundSystem {
 		//a.handler.sessionCache.Clear(*a.info.sessionId)
 		//systemMsg := append([]openai.Messages{}, openai.Messages{
 		//	Role: "system", Content: system,
@@ -156,12 +156,12 @@ func (*RoleListAction) Execute(a *ActionInfo) bool {
 	return true
 }
 
-type AIModeAction struct { /*发散模式*/
+type AIModeAction struct { /* Divergent mode */
 }
 
 func (*AIModeAction) Execute(a *ActionInfo) bool {
 	if _, foundMode := utils.EitherCutPrefix(a.info.qParsed,
-		"/ai_mode", "发散模式"); foundMode {
+		"/ai_mode", "ai mode"); foundMode {
 		SendAIModeListsCard(*a.ctx, a.info.sessionId, a.info.msgId, openai.AIModeStrs)
 		return false
 	}

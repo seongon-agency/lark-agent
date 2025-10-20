@@ -144,7 +144,7 @@ func (s *SessionService) SetMsg(sessionId string, msg []openai.Messages) {
 	maxLength := 4096
 	maxCacheTime := time.Hour * 12
 
-	//限制对话上下文长度
+	// Limit conversation context length
 	for getStrPoolTotalLength(msg) > maxLength {
 		msg = append(msg[:1], msg[2:]...)
 	}

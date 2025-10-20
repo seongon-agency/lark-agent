@@ -26,8 +26,8 @@ func TestEitherCutPrefix(t *testing.T) {
 		{
 			name: "Prefix match",
 			args: args{
-				s:      "扮演 bar",
-				prefix: []string{"扮演 "},
+				s:      "act as bar",
+				prefix: []string{"act as "},
 			},
 			want:  "bar",
 			want1: true,
@@ -60,8 +60,8 @@ func TestEitherTrimEqual(t *testing.T) {
 		{
 			name: "Prefix match",
 			args: args{
-				s:      "清除",
-				prefix: []string{"清除"},
+				s:      "clear",
+				prefix: []string{"clear"},
 			},
 			want:  "",
 			want1: true,
@@ -70,16 +70,7 @@ func TestEitherTrimEqual(t *testing.T) {
 			name: "Prefix match",
 			args: args{
 				s:      " /clear ",
-				prefix: []string{"清除", "/clear"},
-			},
-			want:  "",
-			want1: true,
-		},
-		{
-			name: "Prefix match",
-			args: args{
-				s:      " 清除 ",
-				prefix: []string{"清除", "/clear"},
+				prefix: []string{"clear", "/clear"},
 			},
 			want:  "",
 			want1: true,
@@ -88,9 +79,18 @@ func TestEitherTrimEqual(t *testing.T) {
 			name: "Prefix match",
 			args: args{
 				s:      " clear ",
-				prefix: []string{"清除", "/clear"},
+				prefix: []string{"clear", "/clear"},
 			},
-			want:  " clear ",
+			want:  "",
+			want1: true,
+		},
+		{
+			name: "Prefix match",
+			args: args{
+				s:      " reset ",
+				prefix: []string{"clear", "/clear"},
+			},
+			want:  " reset ",
 			want1: false,
 		},
 	}

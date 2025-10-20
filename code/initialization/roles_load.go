@@ -18,7 +18,7 @@ type Role struct {
 
 var RoleList *[]Role
 
-// InitRoleList 加载Prompt
+// InitRoleList loads the Prompt
 func InitRoleList() *[]Role {
 	data, err := ioutil.ReadFile("role_list.yaml")
 	if err != nil {

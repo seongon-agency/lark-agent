@@ -11,7 +11,7 @@ import (
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
-type AudioAction struct { /*语音*/
+type AudioAction struct { /*Audio*/
 }
 
 func (*AudioAction) Execute(a *ActionInfo) bool {
@@ -20,12 +20,12 @@ func (*AudioAction) Execute(a *ActionInfo) bool {
 		return true
 	}
 
-	// 只有私聊才解析语音,其他不解析
+	// Only parse audio in private chats, ignore in other chats
 	if a.info.handlerType != UserHandler {
 		return true
 	}
 
-	//判断是否是语音
+	//Check if it's audio
 	if a.info.msgType == "audio" {
 		fileKey := a.info.fileKey
 		//fmt.Printf("fileKey: %s \n", fileKey)
@@ -45,7 +45,7 @@ func (*AudioAction) Execute(a *ActionInfo) bool {
 
 		//fmt.Println("f: ", f)
 		output := fmt.Sprintf("%s.mp3", fileKey)
-		// 等待转换完成
+		// Wait for conversion to complete
 		audio.OggToWavByPath(f, output)
 		defer os.Remove(output)
 		//fmt.Println("output: ", output)
@@ -54,7 +54,7 @@ func (*AudioAction) Execute(a *ActionInfo) bool {
 		if err != nil {
 			fmt.Println(err)
 
-			sendMsg(*a.ctx, fmt.Sprintf("🤖️：语音转换失败，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+			sendMsg(*a.ctx, fmt.Sprintf("🤖️: Audio conversion failed, please try again later~\nError message: %v", err), a.info.msgId)
 			return false
 		}
 

@@ -15,7 +15,7 @@ import (
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
-// 责任链
+// Chain of responsibility pattern
 func chain(data *ActionInfo, actions ...Action) bool {
 	for _, v := range actions {
 		if !v.Execute(data) {
@@ -56,7 +56,7 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 		fmt.Println("unknown chat type")
 		return nil
 	}
-	logger.Debug("收到消息：", larkcore.Prettify(event.Event.Message))
+	logger.Debug("Received message: ", larkcore.Prettify(event.Event.Message))
 
 	msgType, err := judgeMsgType(event)
 	if err != nil {
@@ -92,20 +92,20 @@ func (m MessageHandler) msgReceivedHandler(ctx context.Context, event *larkim.P2
 		info:    &msgInfo,
 	}
 	actions := []Action{
-		&ProcessedUniqueAction{}, //避免重复处理
-		&ProcessMentionAction{},  //判断机器人是否应该被调用
-		&AudioAction{},           //语音处理
-		&ClearAction{},           //清除消息处理
-		&VisionAction{},          //图片推理处理
-		&PicAction{},             //图片处理
-		&AIModeAction{},          //模式切换处理
-		&RoleListAction{},        //角色列表处理
-		&HelpAction{},            //帮助处理
-		&BalanceAction{},         //余额处理
-		&RolePlayAction{},        //角色扮演处理
-		&MessageAction{},         //消息处理
-		&EmptyAction{},           //空消息处理
-		&StreamMessageAction{},   //流式消息处理
+		&ProcessedUniqueAction{}, //Avoid duplicate processing
+		&ProcessMentionAction{},  //Check if bot should be invoked
+		&AudioAction{},           //Audio processing
+		&ClearAction{},           //Clear message processing
+		&VisionAction{},          //Image reasoning processing
+		&PicAction{},             //Picture processing
+		&AIModeAction{},          //Mode switching processing
+		&RoleListAction{},        //Role list processing
+		&HelpAction{},            //Help processing
+		&BalanceAction{},         //Balance processing
+		&RolePlayAction{},        //Role play processing
+		&MessageAction{},         //Message processing
+		&EmptyAction{},           //Empty message processing
+		&StreamMessageAction{},   //Stream message processing
 	}
 	chain(data, actions...)
 	return nil

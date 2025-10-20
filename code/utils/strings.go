@@ -10,7 +10,7 @@ func CutPrefix(s, prefix string) (string, bool) {
 }
 
 func EitherCutPrefix(s string, prefix ...string) (string, bool) {
-	// 任一前缀匹配则返回剩余部分
+	// Return the remaining part if any prefix matches
 	for _, p := range prefix {
 		if strings.HasPrefix(s, p) {
 			return strings.TrimPrefix(s, p), true
@@ -28,7 +28,7 @@ func TrimEqual(s, prefix string) (string, bool) {
 }
 
 func EitherTrimEqual(s string, prefix ...string) (string, bool) {
-	// 任一前缀匹配则返回剩余部分
+	// Return the remaining part if any prefix matches
 	for _, p := range prefix {
 		if strings.TrimSpace(s) == p {
 			return "", true

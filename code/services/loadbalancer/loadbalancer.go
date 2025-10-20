@@ -39,7 +39,7 @@ func (lb *LoadBalancer) GetAPI() *API {
 		}
 	}
 	if len(availableAPIs) == 0 {
-		//随机复活一个
+		// Randomly revive one
 		fmt.Printf("No available API, revive one randomly\n")
 		rand.Seed(time.Now().UnixNano())
 		index := rand.Intn(len(lb.apis))

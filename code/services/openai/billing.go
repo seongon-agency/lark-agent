@@ -23,7 +23,7 @@ type BalanceResponse struct {
 }
 
 func (gpt *ChatGPT) GetBalance() (*BalanceResponse, error) {
-	fmt.Println("进入")
+	fmt.Println("Entering")
 	var data1 BillingSubScrip
 	err := gpt.sendRequestWithBodyType(
 		gpt.ApiUrl+"/v1/dashboard/billing/subscription",
@@ -32,7 +32,7 @@ func (gpt *ChatGPT) GetBalance() (*BalanceResponse, error) {
 		nil,
 		&data1,
 	)
-	fmt.Println("出错1", err)
+	fmt.Println("Error 1", err)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get billing subscription: %v", err)
 	}
@@ -48,7 +48,7 @@ func (gpt *ChatGPT) GetBalance() (*BalanceResponse, error) {
 		&data2,
 	)
 	fmt.Println(data2)
-	fmt.Println("出错2", err)
+	fmt.Println("Error 2", err)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get billing subscription: %v", err)
 	}

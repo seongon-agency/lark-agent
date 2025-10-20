@@ -202,20 +202,20 @@ func VerifyPngs(pngPaths []string) error {
 }
 
 func ConvertToRGBA(inputFilePath string, outputFilePath string) error {
-	// 打开输入文件
+	// Open input file
 	inputFile, err := os.Open(inputFilePath)
 	if err != nil {
-		return fmt.Errorf("打开文件时出错：%w", err)
+		return fmt.Errorf("error opening file: %w", err)
 	}
 	defer inputFile.Close()
 
-	// 解码图像
+	// Decode image
 	img, _, err := image.Decode(inputFile)
 	if err != nil {
-		return fmt.Errorf("解码图像时出错：%w", err)
+		return fmt.Errorf("error decoding image: %w", err)
 	}
 
-	// 将图像转换为RGBA模式
+	// Convert image to RGBA mode
 	rgba := image.NewRGBA(img.Bounds())
 	for x := 0; x < img.Bounds().Max.X; x++ {
 		for y := 0; y < img.Bounds().Max.Y; y++ {
@@ -223,16 +223,16 @@ func ConvertToRGBA(inputFilePath string, outputFilePath string) error {
 		}
 	}
 
-	// 创建输出文件
+	// Create output file
 	outputFile, err := os.Create(outputFilePath)
 	if err != nil {
-		return fmt.Errorf("创建输出文件时出错：%w", err)
+		return fmt.Errorf("error creating output file: %w", err)
 	}
 	defer outputFile.Close()
 
-	// 编码图像为 PNG 格式并写入输出文件
+	// Encode image as PNG format and write to output file
 	if err := png.Encode(outputFile, rgba); err != nil {
-		return fmt.Errorf("编码图像时出错：%w", err)
+		return fmt.Errorf("error encoding image: %w", err)
 	}
 
 	return nil
@@ -281,17 +281,17 @@ func ConvertJpegToPNG(jpgPath string) error {
 }
 
 func GetImageCompressionType(path string) (string, error) {
-	// 打开文件
+	// Open file
 	file, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
 	defer file.Close()
 
-	// 创建 bufio.Reader
+	// Create bufio.Reader
 	reader := bufio.NewReader(file)
 
-	// 解码图像
+	// Decode image
 	_, format, err := image.DecodeConfig(reader)
 	if err != nil {
 		fmt.Println("err: ", err)
@@ -299,24 +299,24 @@ func GetImageCompressionType(path string) (string, error) {
 	}
 
 	fmt.Println("format: ", format)
-	// 返回压缩类型
+	// Return compression type
 	return format, nil
 }
 
 func GetBase64FromImage(imagePath string) (string, error) {
-	// 打开文件
-	// 读取图片文件
+	// Open file
+	// Read image file
 	imageFile, err := os.Open(imagePath)
 	if err != nil {
 		return "", err
 	}
 	defer imageFile.Close()
-	// 读取图片内容
+	// Read image content
 	imageData, err := ioutil.ReadAll(imageFile)
 	if err != nil {
 		return "", err
 	}
-	// 将图片内容转换为base64编码
+	// Convert image content to base64 encoding
 	base64String := base64.StdEncoding.EncodeToString(imageData)
 
 	return base64String, nil

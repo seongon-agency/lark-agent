@@ -37,7 +37,7 @@ func (gpt *ChatGPT) GetVisionInfo(msg []VisionMessages) (
 	url := gpt.FullUrl("chat/completions")
 	logger.Debug("request body ", requestBody)
 	if url == "" {
-		return resp, errors.New("无法获取openai请求地址")
+		return resp, errors.New("unable to get openai request URL")
 	}
 	//gpt.ChangeMode("gpt-4-vision-preview")
 	//fmt.Println("model", gpt.Model)
@@ -47,7 +47,7 @@ func (gpt *ChatGPT) GetVisionInfo(msg []VisionMessages) (
 	} else {
 		logger.Errorf("ERROR %v", err)
 		resp = Messages{}
-		err = errors.New("openai 请求失败")
+		err = errors.New("openai request failed")
 	}
 	return resp, err
 }

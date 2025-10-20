@@ -39,7 +39,7 @@ func CommonProcessVisionStyle(msg CardMsg,
 	fmt.Println(larkcore.Prettify(msg))
 	cache.SetVisionDetail(msg.SessionId, services.VisionDetail(option))
 	//send text
-	replyMsg(context.Background(), "图片解析度调整为："+option,
+	replyMsg(context.Background(), "Image resolution adjusted to: "+option,
 		&msg.MsgId)
 }
 
@@ -57,16 +57,16 @@ func CommonProcessVisionModeChange(cardMsg CardMsg,
 
 		newCard, _ :=
 			newSendCard(
-				withHeader("🕵️️ 已进入图片推理模式", larkcard.TemplateBlue),
+				withHeader("🕵️️ Entered image reasoning mode", larkcard.TemplateBlue),
 				withVisionDetailLevelBtn(&sessionId),
-				withNote("提醒：回复图片，让LLM和你一起推理图片的内容。"))
+				withNote("Reminder: Reply with images to let LLM reason about the image content with you."))
 		return newCard, nil, true
 	}
 	if cardMsg.Value == "0" {
 		newCard, _ := newSendCard(
-			withHeader("️🎒 机器人提醒", larkcard.TemplateGreen),
-			withMainMd("依旧保留此话题的上下文信息"),
-			withNote("我们可以继续探讨这个话题,期待和您聊天。如果您有其他问题或者想要讨论的话题，请告诉我哦"),
+			withHeader("️🎒 Bot Reminder", larkcard.TemplateGreen),
+			withMainMd("Context information for this topic is still retained"),
+			withNote("We can continue discussing this topic, looking forward to chatting with you. If you have other questions or topics you'd like to discuss, please let me know"),
 		)
 		return newCard, nil, true
 	}

@@ -12,8 +12,8 @@ import (
 func TestCompletions(t *testing.T) {
 	config := initialization.LoadConfig("../../config.yaml")
 	msgs := []Messages{
-		{Role: "system", Content: "你是一个专业的翻译官，负责中英文翻译。"},
-		{Role: "user", Content: "翻译这段话: The assistant messages help store prior responses. They can also be written by a developer to help give examples of desired behavior."},
+		{Role: "system", Content: "You are a professional translator responsible for Chinese-English translation."},
+		{Role: "user", Content: "Translate this: The assistant messages help store prior responses. They can also be written by a developer to help give examples of desired behavior."},
 	}
 	gpt := NewChatGPT(*config)
 	resp, err := gpt.Completions(msgs, Balance)
@@ -129,7 +129,7 @@ func TestVariateOneImageWithJpg(t *testing.T) {
 	}
 }
 
-// 余额接口已经被废弃
+// Balance API has been deprecated
 func TestChatGPT_GetBalance(t *testing.T) {
 	config := initialization.LoadConfig("../../config.yaml")
 	gpt := NewChatGPT(*config)
@@ -141,10 +141,10 @@ func TestChatGPT_GetBalance(t *testing.T) {
 }
 
 func TestChatGPT_streamChat(t *testing.T) {
-	// 初始化配置
+	// Initialize configuration
 	config := initialization.LoadConfig("../../config.yaml")
 
-	// 准备测试用例
+	// Prepare test cases
 	testCases := []struct {
 		msg        []Messages
 		wantOutput string
@@ -154,11 +154,11 @@ func TestChatGPT_streamChat(t *testing.T) {
 			msg: []Messages{
 				{
 					Role:    "system",
-					Content: "从现在起你要化身职场语言大师，你需要用婉转的方式回复老板想你提出的问题，或像领导提出请求。",
+					Content: "From now on, you need to become a workplace language master. You need to respond to questions from your boss in a tactful way, or make requests to leadership.",
 				},
 				{
 					Role:    "user",
-					Content: "领导，我想请假一天",
+					Content: "Boss, I would like to request a day off",
 				},
 			},
 			wantOutput: "",
@@ -166,14 +166,14 @@ func TestChatGPT_streamChat(t *testing.T) {
 		},
 	}
 
-	// 执行测试用例
+	// Execute test cases
 	for _, tc := range testCases {
-		// 准备输入和输出
+		// Prepare input and output
 		responseStream := make(chan string)
 		ctx := context.Background()
 		c := NewChatGPT(*config)
 
-		// 启动一个协程来模拟流式聊天
+		// Start a goroutine to simulate streaming chat
 		go func() {
 			err := c.StreamChat(ctx, tc.msg, Balance, responseStream)
 			if err != nil {
@@ -181,7 +181,7 @@ func TestChatGPT_streamChat(t *testing.T) {
 			}
 		}()
 
-		// 等待输出并检查是否符合预期
+		// Wait for output and check if it meets expectations
 		select {
 		case gotOutput := <-responseStream:
 			fmt.Printf("gotOutput: %v\n", gotOutput)

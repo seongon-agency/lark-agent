@@ -18,17 +18,17 @@ const (
 )
 
 var AIModeMap = map[string]AIMode{
-	"严谨": Fresh,
-	"简洁": Warmth,
-	"标准": Balance,
-	"发散": Creativity,
+	"Rigorous": Fresh,
+	"Concise":  Warmth,
+	"Standard": Balance,
+	"Creative": Creativity,
 }
 
 var AIModeStrs = []string{
-	"严谨",
-	"简洁",
-	"标准",
-	"发散",
+	"Rigorous",
+	"Concise",
+	"Standard",
+	"Creative",
 }
 
 type Messages struct {
@@ -36,7 +36,7 @@ type Messages struct {
 	Content string `json:"content"`
 }
 
-// ChatGPTResponseBody 请求体
+// ChatGPTResponseBody request body
 type ChatGPTResponseBody struct {
 	ID      string                 `json:"id"`
 	Object  string                 `json:"object"`
@@ -52,7 +52,7 @@ type ChatGPTChoiceItem struct {
 	FinishReason string   `json:"finish_reason"`
 }
 
-// ChatGPTRequestBody 响应体
+// ChatGPTRequestBody response body
 type ChatGPTRequestBody struct {
 	Model            string     `json:"model"`
 	Messages         []Messages `json:"messages"`
@@ -85,7 +85,7 @@ func (gpt *ChatGPT) Completions(msg []Messages, aiMode AIMode) (resp Messages,
 	logger.Debug(url)
 	logger.Debug("request body ", requestBody)
 	if url == "" {
-		return resp, errors.New("无法获取openai请求地址")
+		return resp, errors.New("unable to get openai request URL")
 	}
 	err = gpt.sendRequestWithBodyType(url, "POST", jsonBody, requestBody, gptResponseBody)
 	if err == nil && len(gptResponseBody.Choices) > 0 {
@@ -93,7 +93,7 @@ func (gpt *ChatGPT) Completions(msg []Messages, aiMode AIMode) (resp Messages,
 	} else {
 		logger.Errorf("ERROR %v", err)
 		resp = Messages{}
-		err = errors.New("openai 请求失败")
+		err = errors.New("openai request failed")
 	}
 	return resp, err
 }

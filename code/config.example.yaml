@@ -1,32 +1,32 @@
-#  飞书
+# Feishu (Lark)
 BASE_URL: https://open.feishu.cn
 APP_ID: cli_axxx
 APP_SECRET: xxx
 APP_ENCRYPT_KEY: xxx
 APP_VERIFICATION_TOKEN: xxx
-# 请确保和飞书应用管理平台中的设置一致
+# Please ensure this matches the settings in the Feishu application management platform
 BOT_NAME: chatGpt
-# openAI key 支持负载均衡 可以填写多个key 用逗号分隔
+# OpenAI key supports load balancing. You can fill in multiple keys separated by commas
 OPENAI_KEY: sk-xxx,sk-xxx,sk-xxx
-# openAI model 指定模型，默认为 gpt-3.5-turbo
-# 可选参数有："gpt-4-1106-preview", "gpt-4-32K","gpt-4","gpt-3.5-turbo-16k", "gpt-3.5-turbo"，"gpt-3.5-turbo-16k","gpt-3.5-turbo-1106" 等
-#  如果使用gpt-4，请确认自己是否有接口调用白名单
+# OpenAI model - specify the model, default is gpt-3.5-turbo
+# Optional parameters include: "gpt-4-1106-preview", "gpt-4-32K", "gpt-4", "gpt-3.5-turbo-16k", "gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-1106", etc.
+# If using gpt-4, please confirm whether you have API access whitelist
 OPENAI_MODEL: gpt-3.5-turbo
-# openAI 最大token数 默认为2000
+# OpenAI maximum token count, default is 2000
 OPENAI_MAX_TOKENS: 2000
-# 响应超时时间，单位为毫秒，默认为550毫秒
+# Response timeout in milliseconds, default is 550ms
 OPENAI_HTTP_CLIENT_TIMEOUT: 550
-# 服务器配置
+# Server configuration
 HTTP_PORT: 9000
 HTTPS_PORT: 9001
 USE_HTTPS: false
 CERT_FILE: cert.pem
 KEY_FILE: key.pem
-# openai 地址, 一般不需要修改, 除非你有自己的反向代理
+# OpenAI address, generally no need to modify unless you have your own reverse proxy
 API_URL: https://api.openai.com
-# 代理设置, 例如 "http://127.0.0.1:7890", ""代表不使用代理
+# Proxy settings, e.g., "http://127.0.0.1:7890", "" means no proxy
 HTTP_PROXY: ""
-# 是否开启流式接口返回
+# Whether to enable stream mode for interface response
 STREAM_MODE: false # set true to use stream mode
 # AZURE OPENAI
 AZURE_ON: false # set true to use Azure rather than OpenAI

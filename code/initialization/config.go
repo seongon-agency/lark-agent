@@ -13,7 +13,7 @@ import (
 )
 
 type Config struct {
-	// 表示配置是否已经被初始化了。
+	// Indicates whether the configuration has been initialized.
 	Initialized                bool
 	FeishuBaseUrl              string
 	FeishuAppId                string
@@ -161,7 +161,7 @@ func (config *Config) GetKeyFile() string {
 	return config.KeyFile
 }
 
-// 过滤出 "sk-" 开头的 key
+// Filter keys starting with "sk-"
 func filterFormatKey(keys []string) []string {
 	var result []string
 	for _, key := range keys {

@@ -12,7 +12,7 @@ import (
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
-type VisionAction struct { /*图片推理*/
+type VisionAction struct { /*Image Reasoning*/
 }
 
 func (va *VisionAction) Execute(a *ActionInfo) bool {
@@ -45,7 +45,7 @@ func (va *VisionAction) Execute(a *ActionInfo) bool {
 }
 
 func isVisionCommand(a *ActionInfo) bool {
-	_, foundPic := utils.EitherTrimEqual(a.info.qParsed, "/vision", "图片推理")
+	_, foundPic := utils.EitherTrimEqual(a.info.qParsed, "/vision", "Image Reasoning")
 	return foundPic
 }
 
@@ -83,7 +83,7 @@ func (va *VisionAction) handleVisionPost(a *ActionInfo) bool {
 	}
 
 	if len(base64s) == 0 {
-		replyMsg(*a.ctx, "🤖️：请发送一张图片", a.info.msgId)
+		replyMsg(*a.ctx, "🤖️: Please send an image", a.info.msgId)
 		return false
 	}
 
@@ -105,11 +105,11 @@ func downloadAndEncodeImage(imageKey string, msgId *string) (string, error) {
 }
 
 func replyWithErrorMsg(ctx context.Context, err error, msgId *string) {
-	replyMsg(ctx, fmt.Sprintf("🤖️：图片下载失败，请稍后再试～\n 错误信息: %v", err), msgId)
+	replyMsg(ctx, fmt.Sprintf("🤖️: Image download failed, please try again later~\n Error message: %v", err), msgId)
 }
 
 func (va *VisionAction) processImageAndReply(a *ActionInfo, base64 string, detail string) bool {
-	msg := createVisionMessages("解释这个图片", base64, detail)
+	msg := createVisionMessages("Explain this image", base64, detail)
 	completions, err := a.handler.gpt.GetVisionInfo(msg)
 	if err != nil {
 		replyWithErrorMsg(*a.ctx, err, a.info.msgId)

@@ -15,7 +15,7 @@ func setDefaultPrompt(msg []openai.Messages) []openai.Messages {
 		msg = append(msg, openai.Messages{
 			Role: "system", Content: "You are ChatGPT, " +
 				"a large language model trained by OpenAI. " +
-				"Answer in user's language as concisely as" +
+				"Answer in English as concisely as" +
 				" possible. Knowledge cutoff: 20230601 " +
 				"Current date" + time.Now().Format("20060102"),
 		})
@@ -40,7 +40,7 @@ func setDefaultPrompt(msg []openai.Messages) []openai.Messages {
 //	return msg
 //}
 
-type MessageAction struct { /*消息*/
+type MessageAction struct { /* Message */
 }
 
 func (*MessageAction) Execute(a *ActionInfo) bool {
@@ -48,7 +48,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 		return true
 	}
 	msg := a.handler.sessionCache.GetMsg(*a.info.sessionId)
-	// 如果没有提示词，默认模拟ChatGPT
+	// If there is no prompt, default to simulating ChatGPT
 	msg = setDefaultPrompt(msg)
 	msg = append(msg, openai.Messages{
 		Role: "user", Content: a.info.qParsed,
@@ -61,12 +61,12 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	completions, err := a.handler.gpt.Completions(msg, aiMode)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️：消息机器人摆烂了，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+			"🤖️: The message bot encountered an error, please try again later~\nError info: %v", err), a.info.msgId)
 		return false
 	}
 	msg = append(msg, completions)
 	a.handler.sessionCache.SetMsg(*a.info.sessionId, msg)
-	//if new topic
+	// if new topic
 	if len(msg) == 3 {
 		//fmt.Println("new topic", msg[1].Content)
 		sendNewTopicCard(*a.ctx, a.info.sessionId, a.info.msgId,
@@ -81,13 +81,13 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	err = replyMsg(*a.ctx, completions.Content, a.info.msgId)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️：消息机器人摆烂了，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+			"🤖️: The message bot encountered an error, please try again later~\nError info: %v", err), a.info.msgId)
 		return false
 	}
 	return true
 }
 
-//判断msg中的是否包含system role
+// Check if msg contains system role
 func hasSystemRole(msg []openai.Messages) bool {
 	for _, m := range msg {
 		if m.Role == "system" {
@@ -97,7 +97,7 @@ func hasSystemRole(msg []openai.Messages) bool {
 	return false
 }
 
-type StreamMessageAction struct { /*消息*/
+type StreamMessageAction struct { /* Message */
 }
 
 func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
@@ -105,12 +105,12 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 		return true
 	}
 	msg := a.handler.sessionCache.GetMsg(*a.info.sessionId)
-	// 如果没有提示词，默认模拟ChatGPT
+	// If there is no prompt, default to simulating ChatGPT
 	msg = setDefaultPrompt(msg)
 	msg = append(msg, openai.Messages{
 		Role: "user", Content: a.info.qParsed,
 	})
-	//if new topic
+	// if new topic
 	var ifNewTopic bool
 	if len(msg) <= 3 {
 		ifNewTopic = true
@@ -129,7 +129,7 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 	noContentTimeout := time.AfterFunc(10*time.Second, func() {
 		log.Println("no content timeout")
 		close(done)
-		err := updateFinalCard(*a.ctx, "请求超时", cardId, ifNewTopic)
+		err := updateFinalCard(*a.ctx, "Request timeout", cardId, ifNewTopic)
 		if err != nil {
 			return
 		}
@@ -140,7 +140,7 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				err := updateFinalCard(*a.ctx, "聊天失败", cardId, ifNewTopic)
+				err := updateFinalCard(*a.ctx, "Chat failed", cardId, ifNewTopic)
 				if err != nil {
 					return
 				}
@@ -153,7 +153,7 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 		//fmt.Println("aiMode: ", aiMode)
 		if err := a.handler.gpt.StreamChat(*a.ctx, msg, aiMode,
 			chatResponseStream); err != nil {
-			err := updateFinalCard(*a.ctx, "聊天失败", cardId, ifNewTopic)
+			err := updateFinalCard(*a.ctx, "Chat failed", cardId, ifNewTopic)
 			if err != nil {
 				return
 			}
@@ -211,7 +211,7 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 }
 
 func sendOnProcess(a *ActionInfo, ifNewTopic bool) (*string, error) {
-	// send 正在处理中
+	// send processing
 	cardId, err := sendOnProcessCard(*a.ctx, a.info.sessionId,
 		a.info.msgId, ifNewTopic)
 	if err != nil {

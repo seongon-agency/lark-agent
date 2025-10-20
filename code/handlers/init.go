@@ -23,7 +23,7 @@ const (
 	UserHandler  = "personal"
 )
 
-// handlers 所有消息类型类型的处理器
+// handlers - Handler for all message types
 var handlers MessageHandlerInterface
 
 func InitHandlers(gpt *openai.ChatGPT, config initialization.Config) {

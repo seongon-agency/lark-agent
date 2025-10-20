@@ -14,7 +14,7 @@ import (
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
-type PicAction struct { /*图片*/
+type PicAction struct { /*Picture*/
 }
 
 func (*PicAction) Execute(a *ActionInfo) bool {
@@ -22,9 +22,9 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 	if !check {
 		return true
 	}
-	// 开启图片创作模式
+	// Enable picture creation mode
 	if _, foundPic := utils.EitherTrimEqual(a.info.qParsed,
-		"/picture", "图片创作"); foundPic {
+		"/picture", "Picture Creation"); foundPic {
 		a.handler.sessionCache.Clear(*a.info.sessionId)
 		a.handler.sessionCache.SetMode(*a.info.sessionId,
 			services.ModePicCreate)
@@ -38,14 +38,14 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 	mode := a.handler.sessionCache.GetMode(*a.info.sessionId)
 	//fmt.Println("mode: ", mode)
 	logger.Debug("MODE:", mode)
-	// 收到一张图片,且不在图片创作模式下, 提醒是否切换到图片创作模式
+	// Received an image, and not in picture creation mode, prompt whether to switch to picture creation mode
 	if a.info.msgType == "image" && mode != services.ModePicCreate {
 		sendPicModeCheckCard(*a.ctx, a.info.sessionId, a.info.msgId)
 		return false
 	}
 
 	if a.info.msgType == "image" && mode == services.ModePicCreate {
-		//保存图片
+		//Save image
 		imageKey := a.info.imageKey
 		//fmt.Printf("fileKey: %s \n", imageKey)
 		msgId := a.info.msgId
@@ -56,7 +56,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		//fmt.Println(resp, err)
 		if err != nil {
 			//fmt.Println(err)
-			replyMsg(*a.ctx, fmt.Sprintf("🤖️：图片下载失败，请稍后再试～\n 错误信息: %v", err),
+			replyMsg(*a.ctx, fmt.Sprintf("🤖️: Image download failed, please try again later~\n Error message: %v", err),
 				a.info.msgId)
 			return false
 		}
@@ -70,17 +70,17 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		openai.ConvertJpegToPNG(f)
 		openai.ConvertToRGBA(f, f)
 
-		//图片校验
+		//Image verification
 		err = openai.VerifyPngs([]string{f})
 		if err != nil {
-			replyMsg(*a.ctx, fmt.Sprintf("🤖️：无法解析图片，请发送原图并尝试重新操作～"),
+			replyMsg(*a.ctx, fmt.Sprintf("🤖️: Unable to parse image, please send original image and try again~"),
 				a.info.msgId)
 			return false
 		}
 		bs64, err := a.handler.gpt.GenerateOneImageVariation(f, resolution)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️：图片生成失败，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+				"🤖️: Image generation failed, please try again later~\nError message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImagePlainByBase64(*a.ctx, bs64, a.info.msgId)
@@ -88,7 +88,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 
 	}
 
-	// 生成图片
+	// Generate image
 	if mode == services.ModePicCreate {
 		resolution := a.handler.sessionCache.GetPicResolution(*a.
 			info.sessionId)
@@ -98,7 +98,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 			resolution, style)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️：图片生成失败，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+				"🤖️: Image generation failed, please try again later~\nError message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImageCardByBase64(*a.ctx, bs64, a.info.msgId, a.info.sessionId,

@@ -17,7 +17,7 @@ func init() {
 
 	gin.DefaultWriter = logger.Out
 
-	// 设置日志级别 支持
+	// Set log level. Supported levels:
 	//PanicLevel
 	//FatalLevel
 	//ErrorLevel
