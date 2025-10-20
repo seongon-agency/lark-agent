@@ -31,8 +31,13 @@ func CommonProcessAIMode(msg CardMsg, cardAction *larkcard.CardAction,
 	cache services.SessionServiceCacheInterface) (interface{},
 	error, bool) {
 	option := cardAction.Action.Option
-	replyMsg(context.Background(), "Selected divergent mode: "+option,
-		&msg.MsgId)
 	cache.SetAIMode(msg.SessionId, openai.AIModeMap[option])
-	return nil, nil, true
+
+	// Return a confirmation card instead of trying to send a message
+	newCard, _ := newSendCard(
+		withHeader("🤖 Divergent Mode Selection", larkcard.TemplateIndigo),
+		withMainMd("Selected divergent mode: **"+option+"**"),
+		withNote("The AI mode has been updated. You can continue chatting."),
+	)
+	return newCard, nil, true
 }

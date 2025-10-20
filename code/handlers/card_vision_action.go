@@ -12,7 +12,10 @@ func NewVisionResolutionHandler(cardMsg CardMsg,
 	m MessageHandler) CardHandlerFunc {
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		if cardMsg.Kind == VisionStyleKind {
-			CommonProcessVisionStyle(cardMsg, cardAction, m.sessionCache)
+			newCard, err, done := CommonProcessVisionStyle(cardMsg, cardAction, m.sessionCache)
+			if done {
+				return newCard, err
+			}
 			return nil, nil
 		}
 		return nil, ErrNextHandler
@@ -34,13 +37,19 @@ func NewVisionModeChangeHandler(cardMsg CardMsg,
 
 func CommonProcessVisionStyle(msg CardMsg,
 	cardAction *larkcard.CardAction,
-	cache services.SessionServiceCacheInterface) {
+	cache services.SessionServiceCacheInterface) (interface{}, error, bool) {
 	option := cardAction.Action.Option
 	fmt.Println(larkcore.Prettify(msg))
 	cache.SetVisionDetail(msg.SessionId, services.VisionDetail(option))
-	//send text
-	replyMsg(context.Background(), "Image resolution adjusted to: "+option,
-		&msg.MsgId)
+
+	// Return a confirmation card
+	newCard, _ := newSendCard(
+		withHeader("🕵️ Image Reasoning Mode", larkcard.TemplateBlue),
+		withMainMd("Image resolution adjusted to: **"+option+"**"),
+		withVisionDetailLevelBtn(&msg.SessionId),
+		withNote("You can continue to adjust settings or upload images for analysis."),
+	)
+	return newCard, nil, true
 }
 
 func CommonProcessVisionModeChange(cardMsg CardMsg,
