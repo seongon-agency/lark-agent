@@ -54,7 +54,7 @@ func (*AudioAction) Execute(a *ActionInfo) bool {
 		if err != nil {
 			fmt.Println(err)
 
-			sendMsg(*a.ctx, fmt.Sprintf("🤖️: Audio conversion failed, please try again later~\nError message: %v", err), a.info.msgId)
+			sendMsg(*a.ctx, fmt.Sprintf("🤖️: Audio conversion failed, please try again later. Error message: %v", err), a.info.msgId)
 			return false
 		}
 

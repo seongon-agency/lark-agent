@@ -56,7 +56,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		//fmt.Println(resp, err)
 		if err != nil {
 			//fmt.Println(err)
-			replyMsg(*a.ctx, fmt.Sprintf("🤖️: Image download failed, please try again later~\n Error message: %v", err),
+			replyMsg(*a.ctx, fmt.Sprintf("🤖️: Image download failed, please try again later. Error message: %v", err),
 				a.info.msgId)
 			return false
 		}
@@ -80,7 +80,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		bs64, err := a.handler.gpt.GenerateOneImageVariation(f, resolution)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️: Image generation failed, please try again later~\nError message: %v", err), a.info.msgId)
+				"🤖️: Image generation failed, please try again later. Error message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImagePlainByBase64(*a.ctx, bs64, a.info.msgId)
@@ -98,7 +98,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 			resolution, style)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️: Image generation failed, please try again later~\nError message: %v", err), a.info.msgId)
+				"🤖️: Image generation failed, please try again later. Error message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImageCardByBase64(*a.ctx, bs64, a.info.msgId, a.info.sessionId,

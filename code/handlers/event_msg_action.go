@@ -61,7 +61,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	completions, err := a.handler.gpt.Completions(msg, aiMode)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️: The message bot encountered an error, please try again later~\nError info: %v", err), a.info.msgId)
+			"🤖️: The message bot encountered an error, please try again later. Error info: %v", err), a.info.msgId)
 		return false
 	}
 	msg = append(msg, completions)
@@ -81,7 +81,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	err = replyMsg(*a.ctx, completions.Content, a.info.msgId)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️: The message bot encountered an error, please try again later~\nError info: %v", err), a.info.msgId)
+			"🤖️: The message bot encountered an error, please try again later. Error info: %v", err), a.info.msgId)
 		return false
 	}
 	return true

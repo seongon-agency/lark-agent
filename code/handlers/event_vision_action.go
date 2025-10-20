@@ -105,7 +105,7 @@ func downloadAndEncodeImage(imageKey string, msgId *string) (string, error) {
 }
 
 func replyWithErrorMsg(ctx context.Context, err error, msgId *string) {
-	replyMsg(ctx, fmt.Sprintf("🤖️: Image download failed, please try again later~\n Error message: %v", err), msgId)
+	replyMsg(ctx, fmt.Sprintf("🤖️: Image download failed, please try again later. Error message: %v", err), msgId)
 }
 
 func (va *VisionAction) processImageAndReply(a *ActionInfo, base64 string, detail string) bool {
