@@ -12,13 +12,14 @@ import (
 
 func setDefaultPrompt(msg []openai.Messages) []openai.Messages {
 	if !hasSystemRole(msg) {
-		msg = append(msg, openai.Messages{
+		// Insert system message at the BEGINNING of the array
+		msg = append([]openai.Messages{{
 			Role: "system", Content: "You are ChatGPT, " +
 				"a large language model trained by OpenAI. " +
 				"Answer in English as concisely as" +
 				" possible. Knowledge cutoff: 20230601 " +
 				"Current date" + time.Now().Format("20060102"),
-		})
+		}}, msg...)
 	}
 	return msg
 }
@@ -66,25 +67,17 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	}
 	msg = append(msg, completions)
 	a.handler.sessionCache.SetMsg(*a.info.sessionId, msg)
-	// if new topic
+	// if new topic (system + user + assistant = 3 messages)
 	if len(msg) == 3 {
 		//fmt.Println("new topic", msg[1].Content)
 		sendNewTopicCard(*a.ctx, a.info.sessionId, a.info.msgId,
 			completions.Content)
-		return false
-	}
-	if len(msg) != 3 {
+	} else {
+		// old topic with conversation history
 		sendOldTopicCard(*a.ctx, a.info.sessionId, a.info.msgId,
 			completions.Content)
-		return false
 	}
-	err = replyMsg(*a.ctx, completions.Content, a.info.msgId)
-	if err != nil {
-		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️: The message bot encountered an error, please try again later. Error info: %v", err), a.info.msgId)
-		return false
-	}
-	return true
+	return false
 }
 
 // Check if msg contains system role
@@ -187,15 +180,19 @@ func (m *StreamMessageAction) Execute(a *ActionInfo) bool {
 			answer += res
 			//pp.Println("answer", answer)
 		case <-done: // 添加 done 信号的处理
-			err := updateFinalCard(*a.ctx, answer, cardId, ifNewTopic)
-			if err != nil {
-				return false
-			}
 			ticker.Stop()
+			// Save message to cache FIRST, before updating card
+			// This ensures conversation history is preserved even if card update fails
 			msg := append(msg, openai.Messages{
 				Role: "assistant", Content: answer,
 			})
 			a.handler.sessionCache.SetMsg(*a.info.sessionId, msg)
+
+			// Update card after saving (non-critical operation)
+			err := updateFinalCard(*a.ctx, answer, cardId, ifNewTopic)
+			if err != nil {
+				return false
+			}
 			close(chatResponseStream)
 			log.Printf("\n\n\n")
 			jsonByteArray, err := json.Marshal(msg)
