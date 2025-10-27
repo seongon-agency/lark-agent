@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/logger"
@@ -39,6 +42,7 @@ func main() {
 		handlers.CardHandler())
 
 	r := gin.Default()
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
@@ -46,9 +50,36 @@ func main() {
 	})
 	r.POST("/webhook/event",
 		sdkginext.NewEventHandlerFunc(eventHandler))
-	r.POST("/webhook/card",
-		sdkginext.NewCardActionHandlerFunc(
-			cardHandler))
+
+	// Manual challenge handler for card webhook
+	r.POST("/webhook/card", func(c *gin.Context) {
+		// Read the body
+		bodyBytes, err := io.ReadAll(c.Request.Body)
+		if err != nil {
+			logger.Error("Failed to read card webhook body:", err)
+			c.JSON(500, gin.H{"error": "failed to read body"})
+			return
+		}
+
+		// Parse as JSON to check for challenge
+		var body map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &body); err != nil {
+			logger.Error("Failed to parse card webhook JSON:", err)
+			c.JSON(500, gin.H{"error": "invalid json"})
+			return
+		}
+
+		// Check if this is a challenge request
+		if challenge, ok := body["challenge"].(string); ok {
+			logger.Info("Received challenge request for card webhook:", challenge)
+			c.JSON(200, gin.H{"challenge": challenge})
+			return
+		}
+
+		// Not a challenge - restore body and pass to SDK handler
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
+	})
 
 	if err := initialization.StartServer(*config, r); err != nil {
 		logger.Fatalf("failed to start server: %v", err)
