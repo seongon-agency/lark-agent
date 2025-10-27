@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
@@ -17,14 +16,6 @@ import (
 	"github.com/spf13/pflag"
 	"start-feishubot/services/openai"
 )
-
-func getKeys(m map[string]interface{}) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	return keys
-}
 
 func main() {
 	logger.Info("========================================")
