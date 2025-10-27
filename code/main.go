@@ -2,7 +2,12 @@ package main
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/logger"
@@ -10,14 +15,13 @@ import (
 	"github.com/gin-gonic/gin"
 	sdkginext "github.com/larksuite/oapi-sdk-gin"
 	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
-	"github.com/larksuite/oapi-sdk-go/v3/core/httpserverext"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 	"github.com/spf13/pflag"
 	"start-feishubot/services/openai"
 )
 
-// decryptCardWebhook decrypts the encrypted card webhook body
+// decryptCardWebhook decrypts the encrypted card webhook body using AES
 func decryptCardWebhook(bodyBytes []byte, encryptKey, verificationToken string) ([]byte, error) {
 	// Parse the encrypted body
 	var encryptedBody map[string]interface{}
@@ -27,16 +31,70 @@ func decryptCardWebhook(bodyBytes []byte, encryptKey, verificationToken string) 
 
 	// Check if it's encrypted
 	if encryptStr, ok := encryptedBody["encrypt"].(string); ok {
-		// Use the SDK's crypto helper to decrypt
-		decrypted, err := httpserverext.Decrypt(encryptStr, encryptKey)
+		// Decrypt using AES (Feishu encryption method)
+		decrypted, err := decryptAES(encryptStr, encryptKey)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("AES decryption failed: %w", err)
 		}
-		return []byte(decrypted), nil
+		return decrypted, nil
 	}
 
 	// Not encrypted, return as-is
 	return bodyBytes, nil
+}
+
+// decryptAES decrypts AES-CBC encrypted data (Feishu/Lark encryption format)
+func decryptAES(encryptedStr string, encryptKey string) ([]byte, error) {
+	// Base64 decode the encrypted string
+	ciphertext, err := base64.StdEncoding.DecodeString(encryptedStr)
+	if err != nil {
+		return nil, fmt.Errorf("base64 decode failed: %w", err)
+	}
+
+	// Create the key from encrypt key using SHA256
+	keyBytes := sha256.Sum256([]byte(encryptKey))
+
+	// Create AES cipher
+	block, err := aes.NewCipher(keyBytes[:])
+	if err != nil {
+		return nil, fmt.Errorf("create cipher failed: %w", err)
+	}
+
+	// Check if ciphertext is long enough for IV
+	if len(ciphertext) < aes.BlockSize {
+		return nil, fmt.Errorf("ciphertext too short")
+	}
+
+	// Extract IV (first block) and actual ciphertext
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	// Decrypt using CBC mode
+	mode := cipher.NewCBCDecrypter(block, iv)
+	plaintext := make([]byte, len(ciphertext))
+	mode.CryptBlocks(plaintext, ciphertext)
+
+	// Remove PKCS7 padding
+	plaintext, err = pkcs7Unpad(plaintext)
+	if err != nil {
+		return nil, fmt.Errorf("unpad failed: %w", err)
+	}
+
+	return plaintext, nil
+}
+
+// pkcs7Unpad removes PKCS7 padding
+func pkcs7Unpad(data []byte) ([]byte, error) {
+	if len(data) == 0 {
+		return nil, fmt.Errorf("empty data")
+	}
+
+	padding := int(data[len(data)-1])
+	if padding > len(data) || padding > aes.BlockSize {
+		return nil, fmt.Errorf("invalid padding")
+	}
+
+	return data[:len(data)-padding], nil
 }
 
 func main() {
