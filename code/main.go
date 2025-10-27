@@ -131,11 +131,8 @@ func main() {
 		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
 	})
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	logger.Info("All routes registered successfully")
+	logger.Info("Server starting...")
 
 	if err := initialization.StartServer(*config, r); err != nil {
 		logger.Fatalf("failed to start server: %v", err)
