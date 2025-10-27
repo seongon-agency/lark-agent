@@ -1,17 +1,13 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"io"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/logger"
 
 	"github.com/gin-gonic/gin"
 	sdkginext "github.com/larksuite/oapi-sdk-gin"
-	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 	"github.com/spf13/pflag"
@@ -47,12 +43,6 @@ func main() {
 
 	logger.Info("Card webhook verification token:", config.FeishuAppVerificationToken)
 	logger.Info("Card webhook encrypt key length:", len(config.FeishuAppEncryptKey))
-
-	// Try card handler WITHOUT encryption (empty string for encrypt key)
-	logger.Info("Creating card handler without encryption...")
-	cardHandler := larkcard.NewCardActionHandler(
-		config.FeishuAppVerificationToken, "",
-		handlers.CardHandler())
 
 	r := gin.Default()
 
