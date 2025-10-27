@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/logger"
@@ -77,10 +80,38 @@ func main() {
 	r.POST("/webhook/event",
 		sdkginext.NewEventHandlerFunc(eventHandler))
 
-	// Card webhook - let SDK handle directly without wrapper
+	// Card webhook - manual handler to debug verification issue
 	logger.Info("Registering card webhook handler...")
-	r.POST("/webhook/card",
-		sdkginext.NewCardActionHandlerFunc(cardHandler))
+	r.POST("/webhook/card", func(c *gin.Context) {
+		logger.Info("========== CARD WEBHOOK RECEIVED ==========")
+
+		// Read body
+		bodyBytes, err := c.GetRawData()
+		if err != nil {
+			logger.Error("Failed to read body:", err)
+			c.JSON(500, gin.H{"error": "failed to read body"})
+			return
+		}
+
+		logger.Info("Body:", string(bodyBytes))
+
+		// Check if it's a plain challenge (no encryption)
+		var plainBody map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &plainBody); err == nil {
+			if challenge, ok := plainBody["challenge"].(string); ok {
+				logger.Info("✓ Plain challenge detected:", challenge)
+				c.JSON(200, gin.H{"challenge": challenge})
+				return
+			}
+		}
+
+		// Not a plain challenge - try SDK handler
+		logger.Info("Not a plain challenge, trying SDK handler...")
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
+
+		logger.Info("SDK handler status:", c.Writer.Status())
+	})
 
 	logger.Info("All routes registered successfully")
 	logger.Info("Server starting...")
