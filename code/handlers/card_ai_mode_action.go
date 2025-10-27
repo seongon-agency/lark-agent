@@ -35,7 +35,7 @@ func CommonProcessAIMode(msg CardMsg, cardAction *larkcard.CardAction,
 
 	// Return a confirmation card instead of trying to send a message
 	newCard, _ := newSendCard(
-		withHeader("🤖 Divergent Mode Selection", larkcard.TemplateIndigo),
+		withHeader("Divergent Mode Selection", larkcard.TemplateIndigo),
 		withMainMd("Selected divergent mode: **"+option+"**"),
 		withNote("The AI mode has been updated. You can continue chatting."),
 	)

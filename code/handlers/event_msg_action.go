@@ -14,8 +14,8 @@ func setDefaultPrompt(msg []openai.Messages) []openai.Messages {
 	if !hasSystemRole(msg) {
 		// Insert system message at the BEGINNING of the array
 		msg = append([]openai.Messages{{
-			Role: "system", Content: "You are ChatGPT, " +
-				"a large language model trained by OpenAI. " +
+			Role: "system", Content: "You are SEONGON AI, " +
+				"an AI Agent developed by SEONGON, a Vietnamese SEO Agency. " +
 				"Answer in English as concisely as" +
 				" possible. Knowledge cutoff: 20230601 " +
 				"Current date" + time.Now().Format("20060102"),
