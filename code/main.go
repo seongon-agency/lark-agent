@@ -31,8 +31,8 @@ func main() {
 			return handlers.ReadHandler(ctx, event)
 		})
 
-	logger.Infof("Card webhook verification token: %s", config.FeishuAppVerificationToken)
-	logger.Infof("Card webhook encrypt key length: %d", len(config.FeishuAppEncryptKey))
+	logger.Info("Card webhook verification token:", config.FeishuAppVerificationToken)
+	logger.Info("Card webhook encrypt key length:", len(config.FeishuAppEncryptKey))
 
 	cardHandler := larkcard.NewCardActionHandler(
 		config.FeishuAppVerificationToken, config.FeishuAppEncryptKey,
