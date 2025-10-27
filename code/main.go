@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"io"
 	"start-feishubot/handlers"
 	"start-feishubot/initialization"
 	"start-feishubot/logger"
@@ -77,30 +75,10 @@ func main() {
 	r.POST("/webhook/event",
 		sdkginext.NewEventHandlerFunc(eventHandler))
 
-	// Card webhook with logging wrapper
-	r.POST("/webhook/card", func(c *gin.Context) {
-		logger.Info("========== CARD WEBHOOK REQUEST ==========")
-
-		// Log the raw request for debugging
-		bodyBytes, err := io.ReadAll(c.Request.Body)
-		if err != nil {
-			logger.Error("Failed to read body:", err)
-			c.JSON(500, gin.H{"error": "failed to read body"})
-			return
-		}
-
-		logger.Info("Body length:", len(bodyBytes))
-		logger.Info("Raw body:", string(bodyBytes))
-
-		// Restore body for SDK handler
-		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-
-		// Let SDK handler process (it will decrypt and handle challenge)
-		logger.Info("Passing to SDK handler for decryption...")
-		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
-
-		logger.Info("SDK handler completed, status:", c.Writer.Status())
-	})
+	// Card webhook - let SDK handle directly without wrapper
+	logger.Info("Registering card webhook handler...")
+	r.POST("/webhook/card",
+		sdkginext.NewCardActionHandlerFunc(cardHandler))
 
 	logger.Info("All routes registered successfully")
 	logger.Info("Server starting...")
