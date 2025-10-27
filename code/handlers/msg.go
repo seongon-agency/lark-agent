@@ -752,7 +752,7 @@ func sendVisionModeCheckCard(ctx context.Context,
 func sendNewTopicCard(ctx context.Context,
 	sessionId *string, msgId *string, content string) {
 	newCard, _ := newSendCard(
-		withHeader("👻️ Started New Topic", larkcard.TemplateBlue),
+		withHeader("Started New Topic", larkcard.TemplateBlue),
 		withMainText(content),
 		withNote("Reminder: Click the dialogue box to reply and maintain topic continuity"))
 	replyCard(ctx, msgId, newCard)
@@ -761,7 +761,7 @@ func sendNewTopicCard(ctx context.Context,
 func sendOldTopicCard(ctx context.Context,
 	sessionId *string, msgId *string, content string) {
 	newCard, _ := newSendCard(
-		withHeader("🔃️ Contextual Topic", larkcard.TemplateBlue),
+		withHeader("Contextual Topic", larkcard.TemplateBlue),
 		withMainText(content),
 		withNote("Reminder: Click the dialogue box to reply and maintain topic continuity"))
 	replyCard(ctx, msgId, newCard)

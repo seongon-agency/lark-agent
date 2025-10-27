@@ -45,8 +45,23 @@ func ReadHandler(ctx context.Context, event *larkim.P2MessageReadV1) error {
 func CardHandler() func(ctx context.Context,
 	cardAction *larkcard.CardAction) (interface{}, error) {
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
-		//handlerType := judgeCardType(cardAction)
-		return handlers.cardHandler(ctx, cardAction)
+		defer func() {
+			if err := recover(); err != nil {
+				logger.Errorf("Card handler panic: %v", err)
+			}
+		}()
+
+		if handlers == nil {
+			logger.Error("Handlers not initialized!")
+			return nil, nil
+		}
+
+		logger.Debugf("Card action received: %+v", cardAction)
+		result, err := handlers.cardHandler(ctx, cardAction)
+		if err != nil {
+			logger.Errorf("Card handler error: %v", err)
+		}
+		return result, err
 	}
 }
 
