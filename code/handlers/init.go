@@ -47,19 +47,30 @@ func CardHandler() func(ctx context.Context,
 	return func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		defer func() {
 			if err := recover(); err != nil {
-				logger.Errorf("Card handler panic: %v", err)
+				logger.Error("❌ Card handler PANIC:", err)
 			}
 		}()
 
+		logger.Info("✓ CardHandler called - SDK decryption successful")
+
 		if handlers == nil {
-			logger.Error("Handlers not initialized!")
+			logger.Error("❌ Handlers not initialized!")
 			return nil, nil
 		}
 
-		logger.Debugf("Card action received: %+v", cardAction)
+		if cardAction == nil {
+			logger.Error("❌ cardAction is nil!")
+			return nil, nil
+		}
+
+		logger.Info("Card action type:", cardAction.Action)
+		logger.Debugf("Full card action: %+v", cardAction)
+
 		result, err := handlers.cardHandler(ctx, cardAction)
 		if err != nil {
-			logger.Errorf("Card handler error: %v", err)
+			logger.Error("❌ Card handler error:", err)
+		} else {
+			logger.Info("✓ Card handler completed successfully")
 		}
 		return result, err
 	}

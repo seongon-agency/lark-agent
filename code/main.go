@@ -86,15 +86,14 @@ func main() {
 	r.POST("/webhook/event",
 		sdkginext.NewEventHandlerFunc(eventHandler))
 
-	// Manual challenge handler for card webhook
+	// Card webhook with logging wrapper
 	r.POST("/webhook/card", func(c *gin.Context) {
 		logger.Info("========== CARD WEBHOOK REQUEST ==========")
-		logger.Info("Headers:", c.Request.Header)
 
-		// Read the body
+		// Log the raw request for debugging
 		bodyBytes, err := io.ReadAll(c.Request.Body)
 		if err != nil {
-			logger.Error("Failed to read card webhook body:", err)
+			logger.Error("Failed to read body:", err)
 			c.JSON(500, gin.H{"error": "failed to read body"})
 			return
 		}
@@ -102,33 +101,14 @@ func main() {
 		logger.Info("Body length:", len(bodyBytes))
 		logger.Info("Raw body:", string(bodyBytes))
 
-		// Parse as JSON to check for challenge
-		var body map[string]interface{}
-		if err := json.Unmarshal(bodyBytes, &body); err != nil {
-			logger.Error("Failed to parse card webhook JSON:", err)
-			logger.Error("Parse error:", err.Error())
-			c.JSON(500, gin.H{"error": "invalid json"})
-			return
-		}
-
-		logger.Info("Parsed body:", body)
-
-		// Check if this is a challenge request
-		if challenge, ok := body["challenge"].(string); ok {
-			logger.Info("✓ CHALLENGE DETECTED:", challenge)
-			response := gin.H{"challenge": challenge}
-			logger.Info("Responding with:", response)
-			c.JSON(200, response)
-			logger.Info("✓ Challenge response sent successfully")
-			return
-		}
-
-		logger.Info("Not a challenge - passing to SDK handler")
-		logger.Info("Body keys:", getKeys(body))
-
-		// Not a challenge - restore body and pass to SDK handler
+		// Restore body for SDK handler
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+		// Let SDK handler process (it will decrypt and handle challenge)
+		logger.Info("Passing to SDK handler for decryption...")
 		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
+
+		logger.Info("SDK handler completed, status:", c.Writer.Status())
 	})
 
 	logger.Info("All routes registered successfully")
