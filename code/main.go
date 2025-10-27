@@ -18,13 +18,32 @@ import (
 	"start-feishubot/services/openai"
 )
 
+func getKeys(m map[string]interface{}) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 func main() {
+	logger.Info("========================================")
+	logger.Info("Starting Feishu Bot with ENHANCED LOGGING")
+	logger.Info("========================================")
+
 	initialization.InitRoleList()
 	pflag.Parse()
 	config := initialization.GetConfig()
+
+	logger.Info("Configuration loaded")
+	logger.Info("Verification Token:", config.FeishuAppVerificationToken)
+	logger.Info("Encrypt Key:", config.FeishuAppEncryptKey)
+
 	initialization.LoadLarkClient(*config)
 	gpt := openai.NewChatGPT(*config)
 	handlers.InitHandlers(gpt, *config)
+
+	logger.Info("Handlers initialized successfully")
 
 	eventHandler := dispatcher.NewEventDispatcher(
 		config.FeishuAppVerificationToken, config.FeishuAppEncryptKey).
@@ -43,9 +62,25 @@ func main() {
 
 	r := gin.Default()
 
+	// Add recovery middleware with logging
+	r.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
+		logger.Error("PANIC RECOVERED:", err)
+		c.JSON(500, gin.H{"error": "internal server error"})
+	}))
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
+		})
+	})
+
+	// Test endpoint to verify deployment
+	r.GET("/test-card-logging", func(c *gin.Context) {
+		logger.Info("Test endpoint called - logging is working!")
+		c.JSON(200, gin.H{
+			"message": "Logging enabled",
+			"version": "enhanced-logging-v2",
+			"timestamp": "2025-10-27",
 		})
 	})
 	r.POST("/webhook/event",
@@ -53,6 +88,9 @@ func main() {
 
 	// Manual challenge handler for card webhook
 	r.POST("/webhook/card", func(c *gin.Context) {
+		logger.Info("========== CARD WEBHOOK REQUEST ==========")
+		logger.Info("Headers:", c.Request.Header)
+
 		// Read the body
 		bodyBytes, err := io.ReadAll(c.Request.Body)
 		if err != nil {
@@ -61,24 +99,42 @@ func main() {
 			return
 		}
 
+		logger.Info("Body length:", len(bodyBytes))
+		logger.Info("Raw body:", string(bodyBytes))
+
 		// Parse as JSON to check for challenge
 		var body map[string]interface{}
 		if err := json.Unmarshal(bodyBytes, &body); err != nil {
 			logger.Error("Failed to parse card webhook JSON:", err)
+			logger.Error("Parse error:", err.Error())
 			c.JSON(500, gin.H{"error": "invalid json"})
 			return
 		}
 
+		logger.Info("Parsed body:", body)
+
 		// Check if this is a challenge request
 		if challenge, ok := body["challenge"].(string); ok {
-			logger.Info("Received challenge request for card webhook:", challenge)
-			c.JSON(200, gin.H{"challenge": challenge})
+			logger.Info("✓ CHALLENGE DETECTED:", challenge)
+			response := gin.H{"challenge": challenge}
+			logger.Info("Responding with:", response)
+			c.JSON(200, response)
+			logger.Info("✓ Challenge response sent successfully")
 			return
 		}
+
+		logger.Info("Not a challenge - passing to SDK handler")
+		logger.Info("Body keys:", getKeys(body))
 
 		// Not a challenge - restore body and pass to SDK handler
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 		sdkginext.NewCardActionHandlerFunc(cardHandler)(c)
+	})
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
 	})
 
 	if err := initialization.StartServer(*config, r); err != nil {
