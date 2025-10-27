@@ -45,8 +45,10 @@ func main() {
 	logger.Info("Card webhook verification token:", config.FeishuAppVerificationToken)
 	logger.Info("Card webhook encrypt key length:", len(config.FeishuAppEncryptKey))
 
+	// Try card handler WITHOUT encryption (empty string for encrypt key)
+	logger.Info("Creating card handler without encryption...")
 	cardHandler := larkcard.NewCardActionHandler(
-		config.FeishuAppVerificationToken, config.FeishuAppEncryptKey,
+		config.FeishuAppVerificationToken, "",
 		handlers.CardHandler())
 
 	r := gin.Default()
