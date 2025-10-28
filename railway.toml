@@ -1,0 +1,5 @@
+# Railway Configuration File
+# Railway will deploy two services from this monorepo
+
+# For Railway V2, services are defined in railway.json
+# This TOML file is kept for reference but railway.json is the primary config

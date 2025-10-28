@@ -65,6 +65,12 @@ func LoadConfig(cfg string) *Config {
 	//}
 	//fmt.Println(string(content))
 
+	// Railway compatibility: prioritize PORT env var if HTTP_PORT is not set
+	httpPort := getViperIntValue("HTTP_PORT", 0)
+	if httpPort == 0 {
+		httpPort = getViperIntValue("PORT", 9000)
+	}
+
 	config := &Config{
 		FeishuBaseUrl:              getViperStringValue("BASE_URL", ""),
 		FeishuAppId:                getViperStringValue("APP_ID", ""),
@@ -76,7 +82,7 @@ func LoadConfig(cfg string) *Config {
 		OpenaiModel:                getViperStringValue("OPENAI_MODEL", "gpt-3.5-turbo"),
 		OpenAIHttpClientTimeOut:    getViperIntValue("OPENAI_HTTP_CLIENT_TIMEOUT", 550),
 		OpenaiMaxTokens:            getViperIntValue("OPENAI_MAX_TOKENS", 2000),
-		HttpPort:                   getViperIntValue("HTTP_PORT", 9000),
+		HttpPort:                   httpPort,
 		HttpsPort:                  getViperIntValue("HTTPS_PORT", 9001),
 		UseHttps:                   getViperBoolValue("USE_HTTPS", false),
 		CertFile:                   getViperStringValue("CERT_FILE", "cert.pem"),

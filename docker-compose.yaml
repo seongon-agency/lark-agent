@@ -1,30 +1,98 @@
-version: '3.3'
+version: '3.8'
+
 services:
-  feishu-chatgpt:
-    container_name: feishu-chatgpt
+  # Python Agno AI Service
+  agno-service:
+    container_name: agno-service
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # OpenAI Configuration
+      - OPENAI_KEY=${OPENAI_KEY:-sk-xxx}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+      # Server Configuration
+      - HOST=0.0.0.0
+      - PORT=8000
+      # Storage Configuration
+      - STORAGE_DIR=/app/data
+    volumes:
+      # Persist SQLite database
+      - agno-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - lark-agent-network
+
+  # Go Feishu Bot Service
+  feishu-bot:
+    container_name: feishu-bot
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "9000:9000/tcp"
-    # volumes:
-    #   - ./code/config.yaml:/app/config.yaml:ro
+      - "9000:9000"
     environment:
-      - APP_ID=cli_axxx
-      - APP_SECRET=xxx
-      - APP_ENCRYPT_KEY=xxx
-      - APP_VERIFICATION_TOKEN=xxx
-      # 请确保和飞书应用管理平台中的设置一致
-      - BOT_NAME=chatGpt
-      # OpenAI API Key 支持负载均衡, 可以填写多个 Key 用逗号分隔
-      - OPENAI_KEY=sk-xxx,sk-xxx,sk-xxx
-      # 服务器配置
+      # Feishu/Lark Configuration
+      - APP_ID=${APP_ID:-cli_axxx}
+      - APP_SECRET=${APP_SECRET:-xxx}
+      - APP_ENCRYPT_KEY=${APP_ENCRYPT_KEY:-xxx}
+      - APP_VERIFICATION_TOKEN=${APP_VERIFICATION_TOKEN:-xxx}
+      - BOT_NAME=${BOT_NAME:-chatGpt}
+
+      # OpenAI Configuration (for direct OpenAI calls)
+      - OPENAI_KEY=${OPENAI_KEY:-sk-xxx}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-3.5-turbo}
+      - OPENAI_MAX_TOKENS=${OPENAI_MAX_TOKENS:-2000}
+
+      # Agno Service Integration
+      - AGNO_SERVICE_URL=http://agno-service:8000
+      - USE_AGNO=${USE_AGNO:-true}
+
+      # Server Configuration
       - HTTP_PORT=9000
       - HTTPS_PORT=9001
       - USE_HTTPS=false
       - CERT_FILE=cert.pem
       - KEY_FILE=key.pem
-      # OpenAI 地址, 一般不需要修改, 除非你有自己的反向代理
-      - API_URL=https://api.openai.com
-      # 代理设置, 例如 - HTTP_PROXY=http://127.0.0.1:7890, 默认代表不使用代理
-      - HTTP_PROXY
+
+      # API Configuration
+      - API_URL=${API_URL:-https://api.openai.com}
+      - HTTP_PROXY=${HTTP_PROXY:-}
+
+      # Azure OpenAI (Optional)
+      - AZURE_ON=${AZURE_ON:-false}
+      - AZURE_API_VERSION=${AZURE_API_VERSION:-2023-03-15-preview}
+      - AZURE_DEPLOYMENT_NAME=${AZURE_DEPLOYMENT_NAME:-}
+      - AZURE_RESOURCE_NAME=${AZURE_RESOURCE_NAME:-}
+      - AZURE_OPENAI_TOKEN=${AZURE_OPENAI_TOKEN:-}
+
+      # Advanced Settings
+      - STREAM_MODE=${STREAM_MODE:-false}
+    depends_on:
+      agno-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - lark-agent-network
+
+volumes:
+  agno-data:
+    driver: local
+
+networks:
+  lark-agent-network:
+    driver: bridge

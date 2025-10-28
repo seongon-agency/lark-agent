@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(go run main.go)"
+      "Bash(go run main.go)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
