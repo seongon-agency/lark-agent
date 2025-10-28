@@ -56,19 +56,51 @@ func GetConfig() *Config {
 }
 
 func LoadConfig(cfg string) *Config {
+	// Read config file if it exists (optional for Railway)
 	viper.SetConfigFile(cfg)
-	viper.ReadInConfig()
+	if err := viper.ReadInConfig(); err != nil {
+		// Config file is optional, especially on Railway
+		fmt.Printf("Warning: Could not read config file %s: %v (using env vars)\n", cfg, err)
+	}
 	viper.AutomaticEnv()
-	//content, err := ioutil.ReadFile("config.yaml")
-	//if err != nil {
-	//	fmt.Println("Error reading file:", err)
-	//}
-	//fmt.Println(string(content))
 
-	// Railway compatibility: prioritize PORT env var if HTTP_PORT is not set
-	httpPort := getViperIntValue("HTTP_PORT", 0)
+	// Railway compatibility: Try HTTP_PORT first, then PORT, then default to 9000
+	// Railway automatically sets PORT, but HTTP_PORT can override it
+	var httpPort int
+
+	// Try reading from environment variables directly (Railway sets these)
+	if portStr := os.Getenv("HTTP_PORT"); portStr != "" {
+		if p, err := strconv.Atoi(portStr); err == nil {
+			httpPort = p
+			fmt.Printf("Using HTTP_PORT from env: %d\n", httpPort)
+		}
+	}
+
+	// If HTTP_PORT not set, try PORT (Railway default)
 	if httpPort == 0 {
-		httpPort = getViperIntValue("PORT", 9000)
+		if portStr := os.Getenv("PORT"); portStr != "" {
+			if p, err := strconv.Atoi(portStr); err == nil {
+				httpPort = p
+				fmt.Printf("Using PORT from env: %d\n", httpPort)
+			} else {
+				fmt.Printf("Warning: PORT env var '%s' is not a valid integer, using default\n", portStr)
+			}
+		}
+	}
+
+	// If still not set, try Viper (config file)
+	if httpPort == 0 {
+		if viper.IsSet("HTTP_PORT") {
+			httpPort = getViperIntValue("HTTP_PORT", 0)
+		} else if viper.IsSet("PORT") {
+			httpPort = getViperIntValue("PORT", 0)
+		}
+	}
+
+	// Final fallback to default
+	if httpPort == 0 {
+		httpPort = 9000
+		fmt.Printf("Using default port: %d\n", httpPort)
 	}
 
 	config := &Config{

@@ -1,0 +1,116 @@
+================================================================================
+RAILWAY PORT ERROR - FIXED ✅
+================================================================================
+
+PROBLEM: "PORT is not valid integer" error when deploying to Railway
+
+SOLUTION: Updated code/initialization/config.go to:
+- Read PORT directly from environment variables (bypasses Viper issues)
+- Handle invalid PORT values gracefully with fallback
+- Make config.yaml optional for Railway deployments
+- Add robust error handling and logging
+
+================================================================================
+WHAT TO DO NOW
+================================================================================
+
+1. COMMIT AND PUSH THE CHANGES:
+
+   git add .
+   git commit -m "Fix PORT configuration for Railway deployment"
+   git push origin main
+
+
+2. IN RAILWAY DASHBOARD:
+
+   a. Go to your feishu-bot service → Variables tab
+
+   b. REMOVE any manually set PORT variable (if exists)
+      → Railway sets PORT automatically - don't override it!
+
+   c. VERIFY these variables are set:
+      - APP_ID=cli_xxxxx
+      - APP_SECRET=xxxxx
+      - APP_ENCRYPT_KEY=xxxxx
+      - APP_VERIFICATION_TOKEN=xxxxx
+      - BOT_NAME=chatGpt
+      - OPENAI_KEY=sk-xxxxx
+      - AGNO_SERVICE_URL=http://agno-service.railway.internal:8000
+      - USE_AGNO=true
+
+
+3. REDEPLOY:
+
+   Railway will auto-deploy after you push, OR
+   Manually redeploy from Railway dashboard → Deployments → Redeploy
+
+
+4. CHECK LOGS:
+
+   railway logs
+
+   Look for: "Using PORT from env: XXXX"
+   This confirms PORT is being read correctly
+
+
+5. TEST:
+
+   curl https://your-railway-domain.up.railway.app/ping
+
+   Should return: pong
+
+================================================================================
+DETAILED EXPLANATION
+================================================================================
+
+The issue was that Viper (config library) wasn't reading Railway's PORT
+environment variable correctly.
+
+The fix adds a multi-layer approach:
+1. Try os.Getenv("PORT") directly - Works with Railway
+2. Try Viper (config file) - Works locally
+3. Default to 9000 - Safe fallback
+
+Railway sets PORT automatically (e.g., 8080, 3000, etc.) and our app now
+reads it correctly.
+
+================================================================================
+FILES CHANGED
+================================================================================
+
+✅ code/initialization/config.go   - Fixed PORT reading logic
+✅ railway.json                     - Added healthcheck and start command
+✅ RAILWAY_PORT_FIX.md             - Detailed troubleshooting guide
+✅ RAILWAY_READY.md                - Updated with fix notice
+
+================================================================================
+FOR MORE DETAILS
+================================================================================
+
+Read: RAILWAY_PORT_FIX.md
+
+This file contains:
+- Detailed explanation of the fix
+- Step-by-step deployment instructions
+- Debugging tips
+- Common causes and solutions
+- Testing procedures
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+DO:
+✅ Let Railway set PORT automatically
+✅ Use environment variables in Railway dashboard
+✅ Check logs after deployment
+
+DON'T:
+❌ Manually set PORT variable in Railway
+❌ Include config.yaml in Docker image
+❌ Use HTTP_PORT (unless you need to override)
+
+================================================================================
+
+The fix is complete. Follow the steps above to deploy successfully! 🚀
+

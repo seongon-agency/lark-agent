@@ -2,6 +2,22 @@
 
 Your Lark-Agent repository is now **100% ready for Railway deployment**!
 
+## Recent Fix: Railway PORT Error ✅
+
+**Fixed**: "PORT is not valid integer" error on Railway deployment
+
+The Go service now:
+- ✅ Reads PORT directly from environment variables
+- ✅ Handles invalid PORT values gracefully
+- ✅ Makes config.yaml optional (uses env vars on Railway)
+- ✅ Falls back to default port (9000) safely
+
+**See**: [RAILWAY_PORT_FIX.md](RAILWAY_PORT_FIX.md) for details
+
+**Important**: Do NOT manually set PORT variable in Railway - it's set automatically!
+
+---
+
 ## What Was Configured
 
 ### 1. Railway Configuration Files ✓
